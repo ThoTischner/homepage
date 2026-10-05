@@ -1,0 +1,32 @@
+---
+import { t, type Lang } from '../i18n/content';
+import { postUrl, readingTime, formatDate, type Post } from '../lib/blog';
+
+interface Props {
+  posts: Post[];
+  lang: Lang;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { posts, lang, headingLevel = 'h3' } = Astro.props;
+const c = t(lang);
+const Heading = headingLevel;
+---
+
+<ul class="posts hover-group" role="list">
+  {posts.map((post) => (
+    <li class="tile post-card">
+      <a href={postUrl(post)} hreflang={lang === 'de' ? undefined : 'de'}>
+        <p class="meta">
+          <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate, lang)}</time>
+          {' · '}{readingTime(post.body)} {c.blog.minutes}
+        </p>
+        <Heading class="post-card-title">{post.data.title}</Heading>
+        <p class="post-card-text">{post.data.description}</p>
+        <ul class="chips" role="list">
+          {post.data.tags.map((tag) => <li>{tag}</li>)}
+        </ul>
+      </a>
+    </li>
+  ))}
+</ul>

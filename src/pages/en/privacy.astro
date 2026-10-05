@@ -1,0 +1,148 @@
+---
+import Base from '../../layouts/Base.astro';
+import Obf from '../../components/Obf.astro';
+import ProtectedLink from '../../components/ProtectedLink.astro';
+import { contact, routes } from '../../i18n/content';
+---
+
+<Base lang="en" title="Privacy Policy – Thomas Tischner IT Systems" description="Privacy policy of Thomas Tischner IT Systems: hosted on GitHub Pages, no cookies, no tracking." alternates={{ de: routes.de.privacy }}>
+  <article class="legal">
+    <div class="container">
+      <h1>Privacy Policy</h1>
+
+      <p class="note">
+        This is an English translation for your convenience. Only the
+        <a href={routes.de.privacy} hreflang="de">German version</a> is legally binding.
+      </p>
+
+      <p>
+        In short: this website sets no cookies, uses no tracking or analytics and loads no third-party content
+        (fonts are served locally). Personal data is only processed when the page is delivered and when you
+        contact me by email or phone.
+      </p>
+
+      <h2>1. Controller</h2>
+      <p>The controller responsible for data processing on this website within the meaning of the GDPR is:</p>
+      <address>
+        <Obf text={contact.name} /><br />
+        {contact.company}<br />
+        <Obf text={contact.street} /><br />
+        <Obf text={contact.city} /><br />
+        Germany<br />
+        Phone: <ProtectedLink href={contact.phoneHref} fallback="#"><Obf text={contact.phone} /></ProtectedLink><br />
+        Email: <ProtectedLink href={`mailto:${contact.email}`} fallback="#"><Obf text={contact.email} /></ProtectedLink>
+      </address>
+
+      <h2>2. Hosting on GitHub Pages</h2>
+      <p>
+        This website is provided via the GitHub Pages service of GitHub, Inc., 88 Colin P. Kelly Jr. Street,
+        San Francisco, CA 94107, USA (a subsidiary of Microsoft Corporation), possibly using content delivery
+        networks employed by GitHub.
+      </p>
+      <p>When you visit the website, the following data is necessarily transmitted to and processed on GitHub’s servers:</p>
+      <ul>
+        <li>IP address of the requesting device,</li>
+        <li>date and time of the request,</li>
+        <li>requested page or file,</li>
+        <li>referrer URL (the previously visited page),</li>
+        <li>browser and operating system used (user agent).</li>
+      </ul>
+      <p>
+        I use GitHub Pages to deliver this website reliably and securely. The legal basis is
+        Art. 6(1)(f) GDPR; my legitimate interest lies in the technically error-free, stable and secure
+        provision of my website.
+      </p>
+      <p>
+        According to GitHub, it stores the IP addresses of visitors to GitHub Pages sites for security purposes
+        (e.g. to defend against attacks). GitHub is itself responsible for this processing. GitHub does not
+        specify a retention period; according to GitHub, the data is stored for as long as necessary for
+        security purposes and to comply with legal obligations. I do not receive any server log files and
+        cannot identify visitors.
+      </p>
+      <p>
+        Data is transferred to the USA in the process. An adequacy decision of the European Commission exists
+        for the USA (EU-U.S. Data Privacy Framework, Art. 45 GDPR); according to GitHub, it is certified under
+        this framework. Further information can be found in
+        <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub’s privacy statement</a>.
+      </p>
+
+      <h2>3. No cookies, no tracking</h2>
+      <p>
+        This website does not use cookies or comparable technologies to store information on your device.
+        There is no reach measurement, no tracking and no profiling. No external fonts, scripts or other
+        third-party content are embedded.
+      </p>
+      <p>
+        The website contains small JavaScript functions, partly embedded directly in the page and partly (the
+        browser game) loaded on demand from the same server. They run exclusively locally in your browser and
+        control a visual effect (a light follows the mouse pointer), the highlighting of the active navigation
+        item, the assembly of the email and phone links and a small browser game that only starts at your
+        request. They store no information on your device and transmit no data to me or third parties. The
+        website also works without JavaScript.
+      </p>
+
+      <h2>4. Contact by email or phone</h2>
+      <p>
+        If you send me an email or call me, I process your details (in particular name, email address or phone
+        number and the content of your request) to handle your inquiry. The legal basis is Art. 6(1)(b) GDPR
+        if your inquiry aims at concluding or performing a contract, otherwise Art. 6(1)(f) GDPR (legitimate
+        interest in answering inquiries).
+      </p>
+      <p>
+        I delete your data as soon as it is no longer required for processing your inquiry and no statutory
+        retention obligations apply (Art. 6(1)(c) GDPR in conjunction with § 147 of the German Fiscal Code:
+        up to 6 years for business correspondence, up to 8 years for accounting records).
+      </p>
+      <p>
+        Emails are processed on the servers of my email provider WEB.DE, a service of 1&amp;1 Mail &amp; Media
+        GmbH, Brauerstraße 48, 76135 Karlsruhe, Germany.
+      </p>
+
+      <h2>5. External links</h2>
+      <p>
+        This website contains links to external services, including my profiles on LinkedIn and GitHub, a
+        certification record on Credly and my own product holzbau-konfigurator.de. Data is only transmitted to
+        these services when you click a link. Their respective privacy policies then apply.
+      </p>
+
+      <h2>6. Obligation to provide data, automated decision-making</h2>
+      <p>
+        You are under no legal or contractual obligation to provide me with personal data. However, the website
+        cannot be delivered without the technically necessary transmission of your IP address, and I cannot
+        answer your inquiry without your contact details. There is no automated decision-making including
+        profiling (Art. 22 GDPR).
+      </p>
+
+      <h2>7. Your rights</h2>
+      <p>You have the following rights regarding your personal data:</p>
+      <ul>
+        <li>right of access (Art. 15 GDPR),</li>
+        <li>right to rectification (Art. 16 GDPR),</li>
+        <li>right to erasure (Art. 17 GDPR),</li>
+        <li>right to restriction of processing (Art. 18 GDPR),</li>
+        <li>right to data portability (Art. 20 GDPR),</li>
+        <li>right to object to processing (Art. 21 GDPR).</li>
+      </ul>
+      <p>
+        <strong>Right to object:</strong> Where processing is based on Art. 6(1)(f) GDPR, you may object at any
+        time on grounds relating to your particular situation. An informal message to the email address above
+        is sufficient.
+      </p>
+      <p>
+        You also have the right to lodge a complaint with a data protection supervisory authority
+        (Art. 77 GDPR). The competent authority is the Bavarian State Office for Data Protection Supervision
+        (BayLDA), Promenade 18, 91522 Ansbach, Germany (postal address: Postfach 1349, 91504 Ansbach),
+        <a href="https://www.lda.bayern.de/de/beschwerde.html">www.lda.bayern.de</a>.
+        You may also contact the supervisory authority of your habitual residence or place of work.
+      </p>
+
+      <h2>8. SSL/TLS encryption</h2>
+      <p>
+        For security reasons, this website uses TLS encryption (HTTPS). You can recognize an encrypted
+        connection by “https://” in your browser’s address bar.
+      </p>
+
+      <p><small>Last updated: October 2026</small></p>
+    </div>
+  </article>
+</Base>

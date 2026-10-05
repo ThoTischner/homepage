@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+import Home from '../components/Home.astro';
+import { t, routes, availableLangs } from '../i18n/content';
+import { homeSchema } from '../lib/schema';
+
+const c = t('de');
+const schema = await homeSchema('de', Astro.site!);
+const alternates = Object.fromEntries(availableLangs.filter((l) => l !== 'de').map((l) => [l, routes[l].home]));
+---
+
+<Base lang="de" title={c.meta.title} description={c.meta.description} alternates={alternates} schema={schema} isHome>
+  <Home lang="de" />
+</Base>

@@ -1,0 +1,150 @@
+---
+import Base from '../layouts/Base.astro';
+import Obf from '../components/Obf.astro';
+import ProtectedLink from '../components/ProtectedLink.astro';
+import { contact, routes } from '../i18n/content';
+---
+
+<Base lang="de" title="Datenschutzerklärung – Thomas Tischner IT Systems" description="Datenschutzerklärung von Thomas Tischner IT Systems: Hosting über GitHub Pages, keine Cookies, kein Tracking." alternates={{ en: routes.en.privacy }}>
+  <article class="legal">
+    <div class="container">
+      <h1>Datenschutzerklärung</h1>
+
+      <p class="note">
+        Kurz gesagt: Diese Website setzt keine Cookies, verwendet kein Tracking und keine Analyse-Tools
+        und lädt keine Inhalte von Drittanbietern (Schriftarten werden lokal ausgeliefert). Personenbezogene
+        Daten fallen nur beim technisch notwendigen Abruf der Seite und bei einer Kontaktaufnahme per E-Mail oder
+        Telefon an.
+      </p>
+
+      <h2>1. Verantwortlicher</h2>
+      <p>Verantwortlich für die Datenverarbeitung auf dieser Website im Sinne der DSGVO ist:</p>
+      <address>
+        <Obf text={contact.name} /><br />
+        {contact.company}<br />
+        <Obf text={contact.street} /><br />
+        <Obf text={contact.city} /><br />
+        {contact.country}<br />
+        Telefon: <ProtectedLink href={contact.phoneHref} fallback="#"><Obf text={contact.phone} /></ProtectedLink><br />
+        E-Mail: <ProtectedLink href={`mailto:${contact.email}`} fallback="#"><Obf text={contact.email} /></ProtectedLink>
+      </address>
+
+      <h2>2. Hosting über GitHub Pages</h2>
+      <p>
+        Diese Website wird über den Dienst GitHub Pages der GitHub, Inc., 88 Colin P. Kelly Jr. Street,
+        San Francisco, CA 94107, USA (Tochtergesellschaft der Microsoft Corporation), bereitgestellt,
+        gegebenenfalls unter Einsatz von Content-Delivery-Netzwerken, die GitHub dafür nutzt.
+      </p>
+      <p>
+        Beim Aufruf der Website werden technisch zwingend folgende Daten an die Server von GitHub übermittelt
+        und dort verarbeitet:
+      </p>
+      <ul>
+        <li>IP-Adresse des anfragenden Geräts,</li>
+        <li>Datum und Uhrzeit des Abrufs,</li>
+        <li>aufgerufene Seite bzw. Datei,</li>
+        <li>Referrer-URL (die zuvor besuchte Seite),</li>
+        <li>verwendeter Browser und Betriebssystem (User-Agent).</li>
+      </ul>
+      <p>
+        Ich nutze GitHub Pages, um diese Website zuverlässig und sicher auszuliefern. Rechtsgrundlage ist
+        Art. 6 Abs. 1 lit. f DSGVO; mein berechtigtes Interesse liegt in der technisch fehlerfreien, stabilen
+        und sicheren Bereitstellung meines Online-Auftritts.
+      </p>
+      <p>
+        GitHub speichert nach eigenen Angaben die IP-Adressen der Besucher von GitHub-Pages-Seiten zu
+        Sicherheitszwecken (z. B. zur Abwehr von Angriffen). Für diese Verarbeitung ist GitHub selbst
+        verantwortlich. Eine konkrete Speicherdauer nennt GitHub nicht; die Daten werden nach Angaben von
+        GitHub so lange gespeichert, wie dies für Sicherheitszwecke und zur Erfüllung rechtlicher Pflichten
+        erforderlich ist. Ich selbst erhalte keine Server-Logfiles und kann Besucher nicht identifizieren.
+      </p>
+      <p>
+        Dabei werden Daten in die USA übermittelt. Für die USA besteht ein Angemessenheitsbeschluss der
+        EU-Kommission (EU-US Data Privacy Framework, Art. 45 DSGVO); GitHub ist nach eigenen Angaben unter
+        diesem Rahmen zertifiziert. Weitere Informationen finden Sie im
+        <a href="https://docs.github.com/de/site-policy/privacy-policies/github-general-privacy-statement">Datenschutzhinweis von GitHub</a>.
+      </p>
+
+      <h2>3. Keine Cookies, kein Tracking</h2>
+      <p>
+        Diese Website verwendet keine Cookies und keine vergleichbaren Technologien zur Speicherung von
+        Informationen auf Ihrem Endgerät. Es findet keine Reichweitenmessung, kein Tracking und keine
+        Profilbildung statt. Es werden keine externen Schriftarten, Skripte oder sonstigen Inhalte von
+        Drittanbietern eingebunden.
+      </p>
+      <p>
+        Die Website enthält kleine JavaScript-Funktionen, teils direkt in die Seite eingebettet, teils (das
+        Browserspiel) erst bei Bedarf vom selben Server nachgeladen. Sie laufen ausschließlich lokal in Ihrem
+        Browser und steuern einen grafischen Effekt (ein Lichtschein folgt dem Mauszeiger), die Hervorhebung
+        des aktiven Navigationspunkts, das Zusammensetzen der E-Mail- und Telefon-Links sowie ein kleines
+        Browserspiel, das nur auf Ihren Wunsch startet. Sie speichern keine Informationen auf Ihrem Endgerät
+        und übermitteln keine Daten an mich oder Dritte. Die Website funktioniert auch ohne JavaScript.
+      </p>
+
+      <h2>4. Kontakt per E-Mail oder Telefon</h2>
+      <p>
+        Wenn Sie mir eine E-Mail senden oder mich anrufen, verarbeite ich Ihre Angaben (insbesondere Name,
+        E-Mail-Adresse bzw. Telefonnummer und Inhalt Ihrer Anfrage), um Ihr Anliegen zu bearbeiten.
+        Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, sofern Ihre Anfrage auf den Abschluss oder die
+        Durchführung eines Vertrags gerichtet ist, im Übrigen Art. 6 Abs. 1 lit. f DSGVO (berechtigtes
+        Interesse an der Beantwortung von Anfragen).
+      </p>
+      <p>
+        Ihre Daten lösche ich, sobald sie für die Bearbeitung nicht mehr erforderlich sind und keine
+        gesetzlichen Aufbewahrungspflichten entgegenstehen (Art. 6 Abs. 1 lit. c DSGVO i. V. m. § 147 AO:
+        bis zu 6 Jahre für Geschäftsbriefe, bis zu 8 Jahre für Buchungsbelege).
+      </p>
+      <p>
+        E-Mails werden über die Server meines E-Mail-Anbieters WEB.DE verarbeitet, einem Dienst der
+        1&amp;1 Mail &amp; Media GmbH, Brauerstraße 48, 76135 Karlsruhe.
+      </p>
+
+      <h2>5. Externe Links</h2>
+      <p>
+        Diese Website enthält Links zu externen Angeboten, u. a. zu meinen Profilen bei LinkedIn und GitHub, zu einem
+        Zertifikatsnachweis bei Credly und zu meinem eigenen Produkt holzbau-konfigurator.de. Daten werden an
+        diese Angebote erst übertragen, wenn Sie einen Link anklicken. Es gelten dann die Datenschutzhinweise
+        des jeweiligen Angebots.
+      </p>
+
+      <h2>6. Pflicht zur Bereitstellung, automatisierte Entscheidungen</h2>
+      <p>
+        Sie sind weder gesetzlich noch vertraglich verpflichtet, mir personenbezogene Daten bereitzustellen.
+        Ohne die technisch notwendige Übermittlung Ihrer IP-Adresse kann die Website jedoch nicht ausgeliefert
+        werden; ohne Angabe Ihrer Kontaktdaten kann ich Ihre Anfrage nicht beantworten. Eine automatisierte
+        Entscheidungsfindung einschließlich Profiling (Art. 22 DSGVO) findet nicht statt.
+      </p>
+
+      <h2>7. Ihre Rechte</h2>
+      <p>Sie haben gegenüber mir folgende Rechte hinsichtlich Ihrer personenbezogenen Daten:</p>
+      <ul>
+        <li>Recht auf Auskunft (Art. 15 DSGVO),</li>
+        <li>Recht auf Berichtigung (Art. 16 DSGVO),</li>
+        <li>Recht auf Löschung (Art. 17 DSGVO),</li>
+        <li>Recht auf Einschränkung der Verarbeitung (Art. 18 DSGVO),</li>
+        <li>Recht auf Datenübertragbarkeit (Art. 20 DSGVO),</li>
+        <li>Recht auf Widerspruch gegen die Verarbeitung (Art. 21 DSGVO).</li>
+      </ul>
+      <p>
+        <strong>Widerspruchsrecht:</strong> Soweit die Verarbeitung auf Art. 6 Abs. 1 lit. f DSGVO beruht,
+        können Sie aus Gründen, die sich aus Ihrer besonderen Situation ergeben, jederzeit Widerspruch
+        einlegen. Eine formlose Mitteilung an die oben genannte E-Mail-Adresse genügt.
+      </p>
+      <p>
+        Zudem haben Sie das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu beschweren
+        (Art. 77 DSGVO). Zuständig ist das Bayerische Landesamt für Datenschutzaufsicht (BayLDA),
+        Promenade 18, 91522 Ansbach (Postanschrift: Postfach 1349, 91504 Ansbach),
+        <a href="https://www.lda.bayern.de/de/beschwerde.html">www.lda.bayern.de</a>.
+        Sie können sich auch an die Aufsichtsbehörde Ihres Aufenthaltsorts oder Arbeitsplatzes wenden.
+      </p>
+
+      <h2>8. SSL-/TLS-Verschlüsselung</h2>
+      <p>
+        Diese Website nutzt aus Sicherheitsgründen eine TLS-Verschlüsselung (HTTPS). Eine verschlüsselte
+        Verbindung erkennen Sie an „https://“ in der Adresszeile Ihres Browsers.
+      </p>
+
+      <p><small>Stand: Oktober 2026</small></p>
+    </div>
+  </article>
+</Base>

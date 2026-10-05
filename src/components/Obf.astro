@@ -1,0 +1,12 @@
+---
+// Renders text as HTML character references (see src/lib/protect.ts).
+import { entities } from '../lib/protect';
+
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+---
+
+<Fragment set:html={entities(text)} />

@@ -1,0 +1,46 @@
+---
+import Base from '../../layouts/Base.astro';
+import Obf from '../../components/Obf.astro';
+import ProtectedLink from '../../components/ProtectedLink.astro';
+import { contact, routes } from '../../i18n/content';
+---
+
+<Base lang="en" title="Legal Notice – Thomas Tischner IT Systems" description="Legal notice of Thomas Tischner IT Systems pursuant to § 5 DDG." alternates={{ de: routes.de.imprint }}>
+  <article class="legal">
+    <div class="container">
+      <h1>Legal Notice</h1>
+
+      <p class="note">
+        This is an English translation for your convenience. Only the
+        <a href={routes.de.imprint} hreflang="de">German version</a> is legally binding.
+      </p>
+
+      <h2>Information pursuant to § 5 of the German Digital Services Act (Digitale-Dienste-Gesetz, DDG)</h2>
+      <address>
+        <Obf text={contact.name} /><br />
+        {contact.company}<br />
+        <Obf text={contact.street} /><br />
+        <Obf text={contact.city} /><br />
+        Germany
+      </address>
+
+      <h2>Contact</h2>
+      <p>
+        Phone: <ProtectedLink href={contact.phoneHref} fallback="#"><Obf text={contact.phone} /></ProtectedLink><br />
+        Email: <ProtectedLink href={`mailto:${contact.email}`} fallback="#"><Obf text={contact.email} /></ProtectedLink>
+      </p>
+
+      <h2>Profession</h2>
+      <p>IT consultant (freelance)</p>
+
+      <h2>VAT ID</h2>
+      <p>VAT identification number pursuant to § 27a of the German VAT Act (UStG): {contact.vatId}</p>
+
+      <h2>Consumer dispute resolution</h2>
+      <p>
+        I am neither willing nor obliged to participate in dispute resolution proceedings before a consumer
+        arbitration board.
+      </p>
+    </div>
+  </article>
+</Base>

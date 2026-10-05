@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import Obf from '../components/Obf.astro';
+import ProtectedLink from '../components/ProtectedLink.astro';
+import { contact, routes } from '../i18n/content';
+---
+
+<Base lang="de" title="Impressum – Thomas Tischner IT Systems" description="Impressum von Thomas Tischner IT Systems gemäß § 5 DDG." alternates={{ en: routes.en.imprint }}>
+  <article class="legal">
+    <div class="container">
+      <h1>Impressum</h1>
+
+      <h2>Angaben gemäß § 5 DDG</h2>
+      <address>
+        <Obf text={contact.name} /><br />
+        {contact.company}<br />
+        <Obf text={contact.street} /><br />
+        <Obf text={contact.city} /><br />
+        {contact.country}
+      </address>
+
+      <h2>Kontakt</h2>
+      <p>
+        Telefon: <ProtectedLink href={contact.phoneHref} fallback="#"><Obf text={contact.phone} /></ProtectedLink><br />
+        E-Mail: <ProtectedLink href={`mailto:${contact.email}`} fallback="#"><Obf text={contact.email} /></ProtectedLink>
+      </p>
+
+      <h2>Berufsbezeichnung</h2>
+      <p>IT-Berater (freiberuflich)</p>
+
+      <h2>Umsatzsteuer-ID</h2>
+      <p>Umsatzsteuer-Identifikationsnummer gemäß § 27a Umsatzsteuergesetz: {contact.vatId}</p>
+
+      <h2>Verbraucherstreitbeilegung</h2>
+      <p>
+        Ich bin nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer
+        Verbraucherschlichtungsstelle teilzunehmen.
+      </p>
+    </div>
+  </article>
+</Base>

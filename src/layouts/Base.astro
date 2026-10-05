@@ -1,0 +1,106 @@
+---
+import '@fontsource-variable/geist';
+import '@fontsource/instrument-serif/400.css';
+import '@fontsource/instrument-serif/400-italic.css';
+import '../styles/global.css';
+import geistUrl from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url';
+import serifUrl from '@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff2?url';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { t, type Lang } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  /** Paths of this page in other available languages */
+  alternates?: Partial<Record<Lang, string>>;
+  /** The home page renders its own layout (including <main>) */
+  isHome?: boolean;
+  noindex?: boolean;
+  /** Structured data (JSON-LD) */
+  schema?: object;
+  /** Open Graph image path, defaults to the language's site image */
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+}
+
+const { lang, title, description, alternates = {}, isHome = false, noindex = false, schema, ogImage: ogPath, ogType = 'website' } = Astro.props;
+const c = t(lang);
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const alternateEntries = Object.entries(alternates) as [Lang, string][];
+const locale = (l: Lang) => (l === 'de' ? 'de_DE' : 'en_US');
+const ogImage = new URL(ogPath ?? `/og-${lang}.jpg`, Astro.site);
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="Thomas Tischner" />
+    <meta name="robots" content={noindex ? 'noindex' : 'index, follow, max-image-preview:large'} />
+    {!noindex && <link rel="canonical" href={canonical} />}
+    {alternateEntries.length > 0 && <link rel="alternate" hreflang={lang} href={canonical} />}
+    {alternateEntries.map(([l, path]) => <link rel="alternate" hreflang={l} href={new URL(path, Astro.site)} />)}
+    {alternateEntries.length > 0 && <link rel="alternate" hreflang="x-default" href={lang === 'de' ? canonical : new URL(alternates.de ?? '/', Astro.site)} />}
+    <link rel="preload" href={geistUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={serifUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    {!noindex && (
+      <>
+        <meta property="og:type" content={ogType} />
+        <meta property="og:site_name" content="Thomas Tischner IT Systems" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:locale" content={locale(lang)} />
+        {alternateEntries.map(([l]) => <meta property="og:locale:alternate" content={locale(l)} />)}
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:image:type" content="image/jpeg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={c.meta.ogAlt} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={ogImage} />
+        <meta name="twitter:image:alt" content={c.meta.ogAlt} />
+      </>
+    )}
+    <slot name="head" />
+    {schema && <script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{c.ui.skip}</a>
+    <div class="spotlight" aria-hidden="true"></div>
+    {isHome ? (
+      <slot />
+    ) : (
+      <>
+        <Header lang={lang} alternates={alternates} />
+        <main id="main" tabindex="-1">
+          <slot />
+        </main>
+        <Footer lang={lang} />
+      </>
+    )}
+    <script>
+      // Activate protected contact links (see src/lib/protect.ts)
+      document.querySelectorAll<HTMLAnchorElement>('a[data-href]').forEach((a) => {
+        try {
+          a.href = new TextDecoder().decode(Uint8Array.from(atob(a.dataset.href ?? ''), (c) => c.charCodeAt(0)));
+        } catch {
+          // keep the fallback link
+        }
+      });
+    </script>
+  </body>
+</html>

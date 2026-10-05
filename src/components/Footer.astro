@@ -1,0 +1,25 @@
+---
+import { t, routes, type Lang } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+  /** Rendered inside the home page's content column instead of full width */
+  inline?: boolean;
+}
+
+const { lang, inline = false } = Astro.props;
+const c = t(lang);
+const year = new Date().getFullYear();
+---
+
+<footer class:list={['site-footer', { 'site-footer--inline': inline }]}>
+  <div class:list={['footer-inner', { container: !inline }]}>
+    <p>© {year} Thomas Tischner IT Systems<slot /></p>
+    <nav aria-label={c.ui.legalLabel}>
+      <ul class="footer-links" role="list">
+        <li><a href={routes[lang].imprint}>{c.footer.imprint}</a></li>
+        <li><a href={routes[lang].privacy}>{c.footer.privacy}</a></li>
+      </ul>
+    </nav>
+  </div>
+</footer>

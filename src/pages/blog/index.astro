@@ -1,0 +1,20 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+import { t, routes } from '../../i18n/content';
+import { getPosts } from '../../lib/blog';
+
+const c = t('de');
+const posts = await getPosts();
+---
+
+<Base lang="de" title={c.blog.indexTitle} description={c.blog.indexDescription} alternates={{ en: routes.en.blog }}>
+  <link slot="head" rel="alternate" type="application/rss+xml" title="Thomas Tischner – Blog" href="/blog/rss.xml" />
+  <section class="blog">
+    <div class="container">
+      <h1>Blog</h1>
+      <p class="blog-intro">{c.blog.intro}</p>
+      <PostList posts={posts} lang="de" headingLevel="h2" />
+    </div>
+  </section>
+</Base>
