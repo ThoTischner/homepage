@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+import { routes } from '../i18n/content';
+---
+
+<Base lang="de" title="Seite nicht gefunden – Thomas Tischner IT Systems" description="Die angeforderte Seite existiert nicht." noindex>
+  <section class="legal">
+    <div class="container">
+      <h1>Seite nicht gefunden</h1>
+      <p>Die angeforderte Seite existiert nicht (mehr). <a href={routes.de.home}>Zur Startseite</a></p>
+      <p lang="en">This page does not exist (anymore). <a href={routes.en.home}>Go to the homepage</a></p>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,14 @@
+---
+// Link whose real target (mailto:/tel:) is set client-side; without JS it points to `fallback`.
+import { encodeHref } from '../lib/protect';
+
+interface Props {
+  href: string;
+  fallback: string;
+  class?: string;
+}
+
+const { href, fallback, class: className } = Astro.props;
+---
+
+<a href={fallback} data-href={encodeHref(href)} class={className}><slot /></a>

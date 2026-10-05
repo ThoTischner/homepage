@@ -1,0 +1,312 @@
+---
+import Portrait from './Portrait.astro';
+import Footer from './Footer.astro';
+import AlienIcon from './AlienIcon.astro';
+import Obf from './Obf.astro';
+import ProtectedLink from './ProtectedLink.astro';
+import { Image } from 'astro:assets';
+import speakerImg from '../assets/speaker.jpg';
+import { t, contact, mailto, routes, availableLangs, type Lang } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const c = t(lang);
+const mail = mailto(c.ui.mailSubject);
+// Language switch: all available languages, current one marked
+const langs = availableLangs.map((l) => ({ code: l, href: routes[l].home, current: l === lang }));
+---
+
+<div class="layout">
+  <!-- Left column: sticky on desktop -->
+  <header class="intro">
+    <div>
+      <div class="intro-top">
+        <Portrait alt={c.hero.portraitAlt} openLabel={c.hero.portraitOpen} closeLabel={c.hero.portraitClose} />
+        {langs.length > 1 && (
+          <nav class="lang-toggle" aria-label={c.ui.langLabel}>
+            {langs.map((l) =>
+              l.current ? (
+                <span aria-current="true">{l.code.toUpperCase()}</span>
+              ) : (
+                <a href={l.href} hreflang={l.code} lang={l.code} aria-label={t(l.code).ui.langName}>{l.code.toUpperCase()}</a>
+              ),
+            )}
+          </nav>
+        )}
+      </div>
+      <p class="eyebrow">{c.hero.eyebrow}</p>
+      <ul class="facts" role="list" aria-label={c.hero.badgesLabel}>
+        {c.hero.badges.map((b) => <li>{b}</li>)}
+      </ul>
+      <h1 class="display"><span class="sheen">{c.hero.name}</span></h1>
+      <p class="role">{c.hero.role}</p>
+      <p class="pitch">{c.hero.pitch}</p>
+      <div class="actions">
+        <ProtectedLink class="pill pill-solid" href={mail} fallback={`#${c.contactSection.id}`}>{c.hero.cta}</ProtectedLink>
+        <a class="pill pill-ghost" href={contact.linkedin} rel="me">LinkedIn <span aria-hidden="true">↗</span></a>
+        <a class="pill pill-ghost" href={contact.github} rel="me">{c.hero.secondary} <span aria-hidden="true">↗</span></a>
+        <button class="pill pill-ghost pill-icon" type="button" data-game hidden aria-label={c.ui.playGame} title={c.ui.playGame}>
+          <AlienIcon />
+        </button>
+      </div>
+    </div>
+    <nav class="toc" aria-label={c.ui.navLabel}>
+      <ul role="list">
+        {c.nav.map((item) => (
+          <li><a href={item.href} data-toc={item.href.slice(1)}><span class="toc-line" aria-hidden="true"></span>{item.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Right column: content -->
+  <main id="main" class="content" tabindex="-1">
+    <section id={c.profile.id} aria-labelledby="profile-title">
+      <h2 id="profile-title" class="section-title">{c.profile.title}</h2>
+      <p class="statement"><strong>{c.profile.lead}</strong> {c.profile.rest}</p>
+      <dl class="profile-stats">
+        {c.profile.stats.map((st) => (
+          <div>
+            <dt>{st.label}</dt>
+            <dd class="sheen">{st.value}</dd>
+          </div>
+        ))}
+      </dl>
+      <h3 class="profile-focus-title">{c.profile.focusTitle}</h3>
+      <dl class="profile-focus">
+        {c.profile.focus.map((f) => (
+          <div>
+            <dt>{f.title}</dt>
+            <dd>{f.text}</dd>
+          </div>
+        ))}
+      </dl>
+      <p class="motto">{c.ui.quoteOpen}{c.profile.motto}{c.ui.quoteClose}</p>
+    </section>
+
+    <section id={c.services.id} aria-labelledby="services-title">
+      <h2 id="services-title" class="section-title">{c.services.title}</h2>
+      <ul class="services hover-group" role="list">
+        {c.services.items.map((s) => (
+          <li class="tile">
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section id={c.projects.id} aria-labelledby="projects-title">
+      <h2 id="projects-title" class="section-title">{c.projects.title}</h2>
+      <ol class="projects hover-group" role="list">
+        {c.projects.items.map((p) => (
+          <li class="tile project">
+            <p class="meta">{p.period} · {p.sector}</p>
+            <h3>{p.title}</h3>
+            <dl class="metrics">
+              {p.metrics.map((m) => (
+                <div>
+                  <dt>{m.label}</dt>
+                  <dd class="sheen">{m.value}</dd>
+                </div>
+              ))}
+            </dl>
+            <p>{p.text}</p>
+            <ul class="chips" role="list">
+              {p.stack.map((s) => <li>{s}</li>)}
+            </ul>
+          </li>
+        ))}
+      </ol>
+      <p class="footnote">{c.projects.note}</p>
+    </section>
+
+    <section id={c.speaker.id} aria-labelledby="speaker-title">
+      <h2 id="speaker-title" class="section-title">{c.speaker.title}</h2>
+      <figure class="speaker-photo">
+        <Image
+          src={speakerImg}
+          alt={c.speaker.imageAlt}
+          widths={[560, 840, 1120]}
+          sizes="(min-width: 1024px) 560px, 100vw"
+          loading="lazy"
+        />
+        <figcaption>{c.speaker.caption}</figcaption>
+      </figure>
+      <p class="statement"><strong>{c.speaker.lead}</strong> {c.speaker.rest}</p>
+      <h3 class="profile-focus-title">{c.speaker.topicsTitle}</h3>
+      <dl class="profile-focus">
+        {c.speaker.topics.map((topic) => (
+          <div>
+            <dt>{topic.title}</dt>
+            <dd>{topic.text}</dd>
+          </div>
+        ))}
+      </dl>
+      <div class="speaker-cta">
+        <ul class="chips" role="list">
+          {c.speaker.formats.map((f) => <li>{f}</li>)}
+        </ul>
+        <ProtectedLink class="pill pill-solid" href={mailto(c.speaker.mailSubject)} fallback={`#${c.contactSection.id}`}>{c.speaker.cta}</ProtectedLink>
+      </div>
+    </section>
+
+    <section id={c.timeline.id} aria-labelledby="timeline-title">
+      <h2 id="timeline-title" class="section-title">{c.timeline.title}</h2>
+      <ol class="timeline hover-group" role="list">
+        {c.timeline.items.map((e) => (
+          <li class="tile">
+            <p class="meta timeline-period">{e.period}</p>
+            <div>
+              <h3>{e.role}</h3>
+              <p class="at">{e.org}</p>
+              {e.text && <p>{e.text}</p>}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section id={c.tech.id} aria-labelledby="tech-title">
+      <h2 id="tech-title" class="section-title">{c.tech.title}</h2>
+      <div class="stack">
+        {c.tech.groups.map((g) => (
+          <div class="stack-group">
+            <h3>{g.group}</h3>
+            <ul class="chips" role="list">
+              {g.items.map((item) => <li>{item}</li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      <h2 id={c.certs.id} class="section-title section-title-sub">{c.certs.title}</h2>
+      <div class="certs">
+        {c.certs.categories.map((cat) => (
+          <div class="cert-group">
+            <h3 class="cert-group-title">
+              {cat.name}
+              {cat.note && <span>{cat.note}</span>}
+            </h3>
+            <div>
+              <ul class="cert-rows" role="list">
+                {cat.items.map((item) => (
+                  <li>
+                    <span class="cert-name">
+                      {item.url ? (
+                        <a href={item.url}>{item.name}<span aria-hidden="true">&nbsp;↗</span><span class="visually-hidden"> {c.ui.externalHint}</span></a>
+                      ) : item.name}
+                      {item.issuer && <span class="cert-issuer">{item.issuer}</span>}
+                    </span>
+                    <span class="cert-year">{item.year}</span>
+                  </li>
+                ))}
+              </ul>
+              {cat.extras?.map((group) => (
+                <div class="cert-extras">
+                  <p class="cert-extras-label">{group.label}</p>
+                  <ul role="list">
+                    {group.items.map((x) => <li>{x}</li>)}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+        <div class="cert-group">
+          <h3 class="cert-group-title">{c.certs.other.name}</h3>
+          <ul class="cert-extras cert-extras-only" role="list">
+            {c.certs.other.items.map((x) => <li>{x}</li>)}
+          </ul>
+        </div>
+      </div>
+      <p class="footnote">{c.certs.note}</p>
+    </section>
+
+    <section id={c.product.id} aria-labelledby="product-title">
+      <h2 id="product-title" class="section-title">{c.product.title}</h2>
+      <a class="tile product" href={c.product.url}>
+        <span class="product-name">{c.product.name} <span class="arrow" aria-hidden="true">↗</span></span>
+        <span class="product-text">{c.product.text}</span>
+        <span class="meta">{c.product.linkLabel}<span class="visually-hidden"> {c.ui.externalHint}</span></span>
+      </a>
+    </section>
+
+    <section id={c.contactSection.id} class="contact" aria-labelledby="contact-title">
+      <h2 id="contact-title" class="section-title">{c.contactSection.title}</h2>
+      <p class="statement">{c.contactSection.text}</p>
+      <ProtectedLink class="contact-mail sheen" href={mail} fallback={`#${c.contactSection.id}`}><Obf text={contact.email} /></ProtectedLink>
+      <ul class="contact-links" role="list">
+        <li><a href={contact.linkedin} rel="me">LinkedIn <span aria-hidden="true">↗</span></a></li>
+        <li><a href={contact.github} rel="me">GitHub <span aria-hidden="true">↗</span></a></li>
+      </ul>
+      <p class="meta">{c.contactSection.availability}</p>
+    </section>
+
+    <Footer lang={lang} inline>
+      <button class="egg" type="button" data-game hidden aria-label={c.ui.playEgg} title="↑ ↑ ↓ ↓ ← → ← → B A">
+        <AlienIcon />
+      </button>
+    </Footer>
+  </main>
+</div>
+
+<script>
+  // Progressive enhancement: cursor spotlight, active section in the navigation, easter egg.
+  const root = document.documentElement;
+  if (matchMedia('(pointer: fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    addEventListener(
+      'pointermove',
+      (e) => {
+        root.style.setProperty('--mx', `${e.clientX}px`);
+        root.style.setProperty('--my', `${e.clientY}px`);
+      },
+      { passive: true },
+    );
+  }
+
+  // Active section: the last one whose top passed the upper third; at the very bottom the last one.
+  const links = new Map(
+    [...document.querySelectorAll<HTMLAnchorElement>('[data-toc]')].map((a) => [a.dataset.toc ?? '', a]),
+  );
+  const sections = [...links.keys()].map((id) => document.getElementById(id)).filter((s) => s !== null);
+  let ticking = false;
+  const markActive = () => {
+    ticking = false;
+    const atBottom = innerHeight + scrollY >= document.documentElement.scrollHeight - 4;
+    let current = sections[0];
+    if (atBottom) current = sections[sections.length - 1];
+    else for (const s of sections) if (s.getBoundingClientRect().top <= innerHeight / 3) current = s;
+    links.forEach((a, id) => (id === current?.id ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')));
+  };
+  const onScroll = () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(markActive);
+    }
+  };
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll);
+  markActive();
+
+  // Easter egg: Kubernetes Invaders, loaded on demand (Konami code or the alien buttons)
+  const launch = () => import('../scripts/invaders.js').then((m) => m.start());
+  document.querySelectorAll<HTMLButtonElement>('[data-game]').forEach((b) => {
+    b.hidden = false;
+    b.addEventListener('click', launch);
+  });
+  const KONAMI = 'arrowup,arrowup,arrowdown,arrowdown,arrowleft,arrowright,arrowleft,arrowright,b,a';
+  const recent: string[] = [];
+  addEventListener('keydown', (e) => {
+    recent.push(e.key.toLowerCase());
+    if (recent.length > 10) recent.shift();
+    if (recent.join(',') === KONAMI) {
+      recent.length = 0;
+      launch();
+    }
+  });
+  console.log('%c👾  ↑ ↑ ↓ ↓ ← → ← → B A', 'font: 600 14px system-ui; padding: 4px 0;');
+</script>

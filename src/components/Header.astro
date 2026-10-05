@@ -1,0 +1,33 @@
+---
+import { t, routes, content, type Lang } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+  alternates: Partial<Record<Lang, string>>;
+}
+
+const { lang, alternates } = Astro.props;
+const c = t(lang);
+const home = routes[lang].home;
+// Only offer languages that actually have content
+const switches = (Object.entries(alternates) as [Lang, string][]).filter(([l]) => content[l]);
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href={home}>Thomas Tischner <span class="brand-sub">IT Systems</span></a>
+    <nav aria-label={c.ui.navLabel}>
+      <ul class="nav-list" role="list">
+        {switches.map(([l, path]) => (
+          <li>
+            <a class="pill pill-ghost pill-sm" href={path} hreflang={l} lang={l}>
+              <span aria-hidden="true">{l.toUpperCase()}</span>
+              <span class="visually-hidden">{t(l).ui.langName}</span>
+            </a>
+          </li>
+        ))}
+        <li><a class="pill pill-solid pill-sm" href={`${home}#${c.contactSection.id}`}>{c.contactSection.title}</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>

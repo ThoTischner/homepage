@@ -1,0 +1,20 @@
+---
+// Home page for additional languages (e.g. /en/), built only for languages with content.
+import Base from '../../layouts/Base.astro';
+import Home from '../../components/Home.astro';
+import { t, routes, availableLangs, defaultLang, type Lang } from '../../i18n/content';
+import { homeSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return availableLangs.filter((lang) => lang !== defaultLang).map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Lang;
+const c = t(lang);
+const schema = await homeSchema(lang, Astro.site!);
+const alternates = Object.fromEntries(availableLangs.filter((l) => l !== lang).map((l) => [l, routes[l].home]));
+---
+
+<Base lang={lang} title={c.meta.title} description={c.meta.description} alternates={alternates} schema={schema} isHome>
+  <Home lang={lang} />
+</Base>

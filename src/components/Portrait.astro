@@ -1,0 +1,33 @@
+---
+// Portrait, optimized at build time. Click to enlarge via the native Popover API (no JS).
+import { Image } from 'astro:assets';
+import portrait from '../assets/portrait.jpg';
+
+interface Props {
+  alt: string;
+  openLabel: string;
+  closeLabel: string;
+}
+
+const { alt, openLabel, closeLabel } = Astro.props;
+---
+
+<button class="portrait-trigger" type="button" popovertarget="portrait-full" aria-label={openLabel}>
+  <Image
+    src={portrait}
+    alt={alt}
+    width={256}
+    widths={[256, 384]}
+    sizes="128px"
+    class="portrait"
+    loading="eager"
+    fetchpriority="high"
+  />
+</button>
+
+<div id="portrait-full" class="portrait-popover" popover>
+  <Image src={portrait} alt={alt} width={720} widths={[480, 720, 1024]} sizes="min(90vw, 480px)" loading="lazy" />
+  <button class="pill pill-ghost pill-sm portrait-close" type="button" popovertarget="portrait-full" popovertargetaction="hide">
+    {closeLabel}
+  </button>
+</div>
