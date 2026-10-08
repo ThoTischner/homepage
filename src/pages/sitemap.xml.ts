@@ -1,4 +1,5 @@
-// sitemap.xml: all pages with hreflang alternates (from the route table) plus blog articles.
+// sitemap.xml: all pages in every language plus blog articles.
+// Language alternates are declared via hreflang links in each page's <head>, not repeated here.
 import type { APIRoute } from 'astro';
 import { routes, type Lang } from '../i18n/content';
 import { getPosts, postUrl } from '../lib/blog';
@@ -8,19 +9,8 @@ const PAGES = Object.keys(routes.de) as (keyof typeof routes.de)[];
 
 export const GET: APIRoute = async ({ site }) => {
   const url = (path: string) => new URL(path, site).href;
-  const pages = PAGES.flatMap((page) =>
-    LANGS.map((lang) => {
-      const alternates = LANGS.map(
-        (l) => `    <xhtml:link rel="alternate" hreflang="${l}" href="${url(routes[l][page])}"/>`,
-      ).join('\n');
-      return `  <url>
-    <loc>${url(routes[lang][page])}</loc>
-${alternates}
-    <xhtml:link rel="alternate" hreflang="x-default" href="${url(routes.de[page])}"/>
-  </url>`;
-    }),
-  );
-  // Articles are German only; lastmod reflects the article's own date, not the build date.
+  const pages = PAGES.flatMap((page) => LANGS.map((lang) => `  <url>\n    <loc>${url(routes[lang][page])}</loc>\n  </url>`));
+  // lastmod reflects the article's own date, not the build date
   const posts = (await getPosts()).map(
     (post) => `  <url>
     <loc>${url(postUrl(post))}</loc>
@@ -28,7 +18,7 @@ ${alternates}
   </url>`,
   );
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${[...pages, ...posts].join('\n')}
 </urlset>
 `;
