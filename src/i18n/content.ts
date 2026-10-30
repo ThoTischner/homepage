@@ -25,6 +25,8 @@ export const contact = {
   githubLabel: 'github.com/ThoTischner',
   linkedin: 'https://www.linkedin.com/in/thomas-tischner/',
   linkedinLabel: 'linkedin.com/in/thomas-tischner',
+  aiCamp: 'https://aisolutionscamp.io/',
+  aiCampLabel: 'AI Solutions Camp',
 };
 
 export const routes = {
@@ -63,6 +65,7 @@ const de = {
     { href: '#werdegang', label: 'Werdegang' },
     { href: '#technologien', label: 'Stack' },
     { href: '#zertifizierungen', label: 'Zertifikate' },
+    { href: '#eigene-projekte', label: 'Eigene Projekte' },
     { href: '#artikel', label: 'Artikel' },
     { href: '#kontakt', label: 'Kontakt' },
   ],
@@ -361,12 +364,29 @@ const de = {
     },
   },
   product: {
-    id: 'produkt',
-    title: 'Eigenes Produkt',
-    name: 'Holzbau-Konfigurator',
-    text: 'B2B-Software für Zimmereien: 3D-Konfigurator mit Kalkulation, von der Anfrage bis zum Angebot. Entwickelt und betrieben von mir.',
-    url: 'https://holzbau-konfigurator.de',
-    linkLabel: 'holzbau-konfigurator.de',
+    id: 'eigene-projekte',
+    title: 'Eigene Projekte',
+    items: [
+      {
+        name: 'Holzbau-Konfigurator',
+        text: 'B2B-Software für Zimmereien: 3D-Konfigurator mit Kalkulation, von der Anfrage bis zum Angebot. Entwickelt und betrieben von mir.',
+        url: 'https://holzbau-konfigurator.de',
+        linkLabel: 'holzbau-konfigurator.de',
+      },
+      {
+        name: 'AI Solutions Camp',
+        text: 'KI auf eigener Infrastruktur: Self-hosted Stacks für RAG, Chatbots und Agents mit Docker-Compose-, Helm- und Terraform-Konfigurationen und Praxis-Guides.',
+        url: 'https://aisolutionscamp.io/',
+        linkLabel: 'aisolutionscamp.io',
+      },
+      {
+        name: 'observability-mcp',
+        text: 'Das zentrale Observability-Gateway für KI-Agents: ein MCP-Server, der über austauschbare Konnektoren jedes Observability-Backend anbindet, die Daten vereinheitlicht, robuste Anomalie-Analysen ergänzt und eine Web-Oberfläche zur Konfiguration mitbringt.',
+        url: 'https://thotischner.github.io/observability-mcp/',
+        linkLabel: 'thotischner.github.io/observability-mcp',
+        repo: 'https://github.com/ThoTischner/observability-mcp',
+      },
+    ],
   },
   blog: {
     id: 'artikel',
@@ -448,6 +468,7 @@ const en: SiteContent = {
     { href: '#career', label: 'Career' },
     { href: '#technologies', label: 'Stack' },
     { href: '#certifications', label: 'Certifications' },
+    { href: '#own-projects', label: 'Own projects' },
     { href: '#articles', label: 'Articles' },
     { href: '#contact', label: 'Contact' },
   ],
@@ -639,10 +660,22 @@ const en: SiteContent = {
     },
   },
   product: {
-    ...de.product,
-    id: 'product',
-    title: 'My product',
-    text: 'B2B software for carpentry businesses: a 3D configurator with pricing, from inquiry to quote. Built and run by me.',
+    id: 'own-projects',
+    title: 'Own projects',
+    items: [
+      {
+        ...de.product.items[0],
+        text: 'B2B software for carpentry businesses: a 3D configurator with pricing, from inquiry to quote. Built and run by me.',
+      },
+      {
+        ...de.product.items[1],
+        text: 'AI on your own infrastructure: self-hosted stacks for RAG, chatbots and agents with Docker Compose, Helm and Terraform configs, plus practical guides.',
+      },
+      {
+        ...de.product.items[2],
+        text: 'The unified observability gateway for AI agents: one MCP server that connects to any observability backend through pluggable connectors, normalizes the data, adds robust anomaly analysis and provides a web UI for configuration.',
+      },
+    ],
   },
   blog: {
     id: 'articles',

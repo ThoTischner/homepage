@@ -51,6 +51,7 @@ const langs = availableLangs.map((l) => ({ code: l, href: routes[l].home, curren
         <ProtectedLink class="pill pill-solid" href={mail} fallback={`#${c.contactSection.id}`}>{c.hero.cta}</ProtectedLink>
         <a class="pill pill-ghost" href={contact.linkedin} rel="me">LinkedIn <span aria-hidden="true">↗</span></a>
         <a class="pill pill-ghost" href={contact.github} rel="me">{c.hero.secondary} <span aria-hidden="true">↗</span></a>
+        <a class="pill pill-ghost" href={contact.aiCamp}>{contact.aiCampLabel} <span aria-hidden="true">↗</span></a>
         <button class="pill pill-ghost pill-icon" type="button" data-game hidden aria-label={c.ui.playGame} title={c.ui.playGame}>
           <AlienIcon />
         </button>
@@ -231,11 +232,21 @@ const langs = availableLangs.map((l) => ({ code: l, href: routes[l].home, curren
 
     <section id={c.product.id} aria-labelledby="product-title">
       <h2 id="product-title" class="section-title">{c.product.title}</h2>
-      <a class="tile product" href={c.product.url}>
-        <span class="product-name">{c.product.name} <span class="arrow" aria-hidden="true">↗</span></span>
-        <span class="product-text">{c.product.text}</span>
-        <span class="meta">{c.product.linkLabel}<span class="visually-hidden"> {c.ui.externalHint}</span></span>
-      </a>
+      <div class="products hover-group">
+        {c.product.items.map((p) => (
+          <div class="tile product">
+            {/* The name link covers the whole tile (::after); the repo link sits above it */}
+            <a class="product-link product-name" href={p.url}>{p.name} <span class="arrow" aria-hidden="true">↗</span><span class="visually-hidden"> {c.ui.externalHint}</span></a>
+            <span class="product-text">{p.text}</span>
+            <span class="meta product-meta">
+              <span>{p.linkLabel}</span>
+              {p.repo && (
+                <a class="product-repo" href={p.repo}>GitHub <span aria-hidden="true">↗</span><span class="visually-hidden"> {c.ui.externalHint}</span></a>
+              )}
+            </span>
+          </div>
+        ))}
+      </div>
     </section>
 
     {latestPosts.length > 0 && (

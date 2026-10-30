@@ -6,10 +6,12 @@ import { getPosts, postUrl } from '../lib/blog';
 
 const LANGS = Object.keys(routes) as Lang[];
 const PAGES = Object.keys(routes.de) as (keyof typeof routes.de)[];
+// Last content change of the static pages: bump on changes so search engines recrawl them
+const PAGES_UPDATED = '2026-10-30';
 
 export const GET: APIRoute = async ({ site }) => {
   const url = (path: string) => new URL(path, site).href;
-  const pages = PAGES.flatMap((page) => LANGS.map((lang) => `  <url>\n    <loc>${url(routes[lang][page])}</loc>\n  </url>`));
+  const pages = PAGES.flatMap((page) => LANGS.map((lang) => `  <url>\n    <loc>${url(routes[lang][page])}</loc>\n    <lastmod>${PAGES_UPDATED}</lastmod>\n  </url>`));
   // lastmod reflects the article's own date, not the build date
   const posts = (await getPosts()).map(
     (post) => `  <url>
