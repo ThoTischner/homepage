@@ -1404,6 +1404,15 @@ ol[role='list'] {
   line-height: 1.6;
 }
 
+/* No outer box: the code block itself is the frame */
+.quickfix {
+  margin-top: 1.5rem;
+}
+
+.quickfix pre {
+  margin-top: 0.5rem;
+}
+
 .summary-label {
   margin-bottom: 0.4rem;
   font-size: 0.75rem;

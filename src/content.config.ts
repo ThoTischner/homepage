@@ -12,6 +12,8 @@ const blog = defineCollection({
     updated: z.coerce.date().optional(),
     tags: z.array(z.string()).min(1),
     summary: z.string(),
+    // Optional shell snippet shown right below the summary box
+    quickfix: z.string().optional(),
     faq: z.array(z.object({ q: z.string(), a: z.string() })).default([]),
     sources: z.array(z.object({ title: z.string(), url: z.string().url() })).default([]),
     draft: z.boolean().default(false),

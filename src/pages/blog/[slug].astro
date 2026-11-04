@@ -21,7 +21,9 @@ interface Props {
 const { post, posts } = Astro.props;
 const c = t('de');
 const { Content, headings } = await render(post);
-const { title, description, pubDate, updated, tags, summary, faq, sources } = post.data;
+const { title, description, pubDate, updated, tags, summary, quickfix, faq, sources } = post.data;
+// Comment lines get Prism's comment class, so the snippet matches Markdown code blocks
+const quickfixLines = (quickfix ?? '').trimEnd().split('\n');
 const toc = headings.filter((h) => h.depth === 2);
 const related = posts.filter((p) => p.id !== post.id).slice(0, 3);
 const schema = articleSchema(post, Astro.site!);
@@ -63,6 +65,17 @@ const schema = articleSchema(post, Astro.site!);
         <p class="summary-label">{c.blog.summary}</p>
         <p>{summary}</p>
       </aside>
+
+      {quickfix && (
+        <aside class="quickfix" aria-label={c.blog.quickfix}>
+          <p class="summary-label">{c.blog.quickfix}</p>
+          <div class="prose">
+            <pre class="language-bash"><code class="language-bash">{quickfixLines.map((line, i) => (
+              <>{line.trimStart().startsWith('#') ? <span class="token comment">{line}</span> : line}{i < quickfixLines.length - 1 && '\n'}</>
+            ))}</code></pre>
+          </div>
+        </aside>
+      )}
 
       {toc.length > 2 && (
         <nav class="article-toc" aria-label={c.blog.toc}>
