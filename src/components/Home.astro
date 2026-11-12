@@ -20,14 +20,41 @@ const mail = mailto(c.ui.mailSubject);
 const latestPosts = (await getPosts()).slice(0, 3);
 // Language switch: all available languages, current one marked
 const langs = availableLangs.map((l) => ({ code: l, href: routes[l].home, current: l === lang }));
+// Certifications: the main list shows the key ones, everything else sits behind <details>
+const certsMain = c.certs.categories
+  .map((cat) => ({ ...cat, items: cat.items.filter((i) => !i.more) }))
+  .filter((cat) => cat.items.length > 0);
+const certsMore = c.certs.categories
+  .map((cat) => ({ ...cat, items: cat.items.filter((i) => i.more) }))
+  .filter((cat) => cat.items.length > 0 || cat.extras?.length);
 ---
 
 <div class="layout">
+  {/* Mobile: table of contents behind a menu button (native popover, works without JS) */}
+  <button class="menu-toggle" type="button" popovertarget="mobile-nav" aria-label={c.ui.menuOpen} title={c.ui.menuOpen}>
+    <span class="menu-icon" aria-hidden="true"><span></span><span></span><span></span></span>
+  </button>
+  <nav id="mobile-nav" class="mobile-nav" popover aria-label={c.ui.navLabel}>
+    <div class="mobile-nav-head">
+      <span class="mobile-nav-brand">{c.hero.name} <span>IT Systems</span></span>
+      <button class="pill pill-ghost pill-icon" type="button" popovertarget="mobile-nav" popovertargetaction="hide" aria-label={c.ui.menuClose} title={c.ui.menuClose}>×</button>
+    </div>
+    <ul role="list">
+      {c.nav.map((item, i) => (
+        <li><a href={item.href}><span class="mobile-nav-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>{item.label}</a></li>
+      ))}
+    </ul>
+  </nav>
+
   {/* Left column: sticky on desktop */}
   <header class="intro">
     <div>
       <div class="intro-top">
         <Portrait alt={c.hero.portraitAlt} openLabel={c.hero.portraitOpen} closeLabel={c.hero.portraitClose} />
+        <div class="intro-meta">
+          <p class="eyebrow">{c.hero.eyebrow}</p>
+          <p class="availability"><span class="availability-dot" aria-hidden="true"></span>{c.hero.availability}</p>
+        </div>
         {langs.length > 1 && (
           <nav class="lang-toggle" aria-label={c.ui.langLabel}>
             {langs.map((l) =>
@@ -40,13 +67,12 @@ const langs = availableLangs.map((l) => ({ code: l, href: routes[l].home, curren
           </nav>
         )}
       </div>
-      <p class="eyebrow">{c.hero.eyebrow}</p>
+      <h1 class="display"><span class="sheen">{c.hero.name}</span> <span class="display-brand">IT Systems</span></h1>
+      <p class="role">{c.hero.role}</p>
+      <p class="pitch">{c.hero.pitch}</p>
       <ul class="facts" role="list" aria-label={c.hero.badgesLabel}>
         {c.hero.badges.map((b) => <li>{b}</li>)}
       </ul>
-      <h1 class="display"><span class="sheen">{c.hero.name}</span></h1>
-      <p class="role">{c.hero.role}</p>
-      <p class="pitch">{c.hero.pitch}</p>
       <div class="actions">
         <ProtectedLink class="pill pill-solid" href={mail} fallback={`#${c.contactSection.id}`}>{c.hero.cta}</ProtectedLink>
         <a class="pill pill-ghost" href={contact.linkedin} rel="me">LinkedIn <span aria-hidden="true">↗</span></a>
@@ -71,33 +97,139 @@ const langs = availableLangs.map((l) => ({ code: l, href: routes[l].home, curren
     <section id={c.profile.id} aria-labelledby="profile-title">
       <h2 id="profile-title" class="section-title">{c.profile.title}</h2>
       <p class="statement"><strong>{c.profile.lead}</strong> {c.profile.rest}</p>
-      <dl class="profile-stats">
+      <dl class="profile-stats" data-reveal>
         {c.profile.stats.map((st) => (
           <div>
             <dt>{st.label}</dt>
-            <dd class="sheen">{st.value}</dd>
+            <dd class="sheen" data-count={st.value}>{st.value}</dd>
           </div>
         ))}
       </dl>
-      <h3 class="profile-focus-title">{c.profile.focusTitle}</h3>
-      <dl class="profile-focus">
-        {c.profile.focus.map((f) => (
-          <div>
-            <dt>{f.title}</dt>
-            <dd>{f.text}</dd>
-          </div>
+      <h3 class="profile-focus-title">{c.profile.pathTitle}</h3>
+      <ol class="profile-path" role="list">
+        {c.profile.path.map((step) => (
+          <li class={step.year ? undefined : 'no-year'}>
+            <span class="profile-path-year">{step.year}</span>
+            <span class="profile-path-text">{step.text}</span>
+          </li>
         ))}
-      </dl>
-      <p class="motto">{c.ui.quoteOpen}{c.profile.motto}{c.ui.quoteClose}</p>
+      </ol>
     </section>
 
     <section id={c.services.id} aria-labelledby="services-title">
       <h2 id="services-title" class="section-title">{c.services.title}</h2>
-      <ul class="services hover-group" role="list">
-        {c.services.items.map((s) => (
-          <li class="tile">
-            <h3>{s.title}</h3>
-            <p>{s.text}</p>
+      <p class="section-intro">{c.services.intro}</p>
+      {/* System diagram: built bottom-up (foundation first). DOM order = build order, drawn bottom to top. */}
+      <p class="sys-hint" hidden><span class="sys-hint-dot" aria-hidden="true"></span>{c.services.hint}</p>
+      <figure class="sys" data-reveal aria-label={c.services.title}>
+        <div class="sys-users">
+          <p class="sys-tag">{c.services.usersLabel}</p>
+          <ul role="list">
+            {c.services.users.map((u, j) => (
+              <li>
+                <button type="button" class="sys-block sys-user" aria-expanded="false" aria-controls={`sys-u-${j}`} disabled>{u.name}</button>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="sys-user-details">
+          {c.services.users.map((u, j) => (
+            <div class="sys-detail" id={`sys-u-${j}`} role="region" aria-label={u.name} hidden>
+              <div class="sys-detail-inner">
+                <p><strong>{u.name}</strong> {u.text}</p>
+                <button type="button" class="sys-detail-close" aria-label={c.services.closeLabel} title={c.services.closeLabel}>×</button>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div class="sys-link sys-link-users" aria-hidden="true"><span></span><span></span><span></span></div>
+
+        <p class="sys-pillar sys-pillar-left"><span>{c.services.pillars[0]}</span></p>
+        <ol class="sys-stack" role="list">
+          {c.services.items.map((layer, li) => (
+            <li class="sys-layer">
+              {li > 0 && (
+                <div class="sys-link" aria-hidden="true"><span></span><span></span><span></span></div>
+              )}
+              <div class="sys-frame">
+                <div class="sys-head">
+                  <span class="sys-num" aria-hidden="true">{String(li + 1).padStart(2, '0')}</span>
+                  <h3>{layer.title}</h3>
+                  <span class="sys-caption">{layer.caption}</span>
+                </div>
+                <ul class="sys-blocks" role="list">
+                  {layer.blocks.map((b, j) => (
+                    <li>
+                      <button type="button" class="sys-block" aria-expanded="false" aria-controls={`sys-d-${li}-${j}`} disabled>{b.name}</button>
+                    </li>
+                  ))}
+                </ul>
+                {/* Explanations: revealed one at a time by the script below */}
+                {layer.blocks.map((b, j) => (
+                  <div class="sys-detail" id={`sys-d-${li}-${j}`} role="region" aria-label={b.name.replace(/\u00AD/g, '')} hidden>
+                    <div class="sys-detail-inner">
+                      <p><strong>{b.name.replace(/\u00AD/g, '')}</strong> {b.text}</p>
+                      <button type="button" class="sys-detail-close" aria-label={c.services.closeLabel} title={c.services.closeLabel}>×</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </li>
+          ))}
+        </ol>
+        <p class="sys-pillar sys-pillar-right"><span>{c.services.pillars[1]}</span></p>
+
+        <div class="sys-ground" aria-hidden="true"></div>
+        <figcaption class="sys-roles">
+          <p class="sys-tag">{c.services.acrossLabel}</p>
+          <ol class="sys-steps" role="list">
+            {c.services.across.map((r, i) => (
+              <li>
+                <span class="sys-step-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <h3>{r.title}</h3>
+                <p>{r.text}</p>
+              </li>
+            ))}
+          </ol>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section id={c.principles.id} aria-labelledby="principles-title">
+      <h2 id="principles-title" class="section-title">{c.principles.title}</h2>
+      <ul class="principles" role="list">
+        {c.principles.items.map((p, i) => (
+          <li class="principle" data-reveal>
+            <div class="principle-head">
+              {i === 0 && (
+                <svg class="principle-icon icon-auto" viewBox="0 0 40 40" aria-hidden="true">
+                  <g class="spin">
+                    <path d="M31 14a12 12 0 0 0-21.5-1.5" />
+                    <path d="M9 26a12 12 0 0 0 21.5 1.5" />
+                    <path d="M9.5 6.5v6h6" />
+                    <path d="M30.5 33.5v-6h-6" />
+                  </g>
+                  <rect x="16" y="16" width="8" height="8" rx="1.5" />
+                </svg>
+              )}
+              {i === 1 && (
+                <svg class="principle-icon icon-ha" viewBox="0 0 40 40" aria-hidden="true">
+                  <path d="M14 20h12" class="link" />
+                  <circle cx="9" cy="20" r="5" class="node node-a" />
+                  <circle cx="31" cy="20" r="5" class="node node-b" />
+                </svg>
+              )}
+              {i === 2 && (
+                <svg class="principle-icon icon-scale" viewBox="0 0 40 40" aria-hidden="true">
+                  <path d="M5 34h30" />
+                  <rect class="bar bar-1" x="8" y="22" width="6" height="12" rx="1" />
+                  <rect class="bar bar-2" x="17" y="15" width="6" height="19" rx="1" />
+                  <rect class="bar bar-3" x="26" y="7" width="6" height="27" rx="1" />
+                </svg>
+              )}
+              <h3>{p.title}</h3>
+            </div>
+            <p>{p.text}</p>
           </li>
         ))}
       </ul>
@@ -107,7 +239,7 @@ const langs = availableLangs.map((l) => ({ code: l, href: routes[l].home, curren
       <h2 id="projects-title" class="section-title">{c.projects.title}</h2>
       <ol class="projects hover-group" role="list">
         {c.projects.items.map((p) => (
-          <li class="tile project">
+          <li class="tile project" data-reveal>
             <p class="meta">{p.period} · {p.sector}</p>
             <h3>{p.title}</h3>
             <dl class="metrics">
@@ -126,6 +258,10 @@ const langs = availableLangs.map((l) => ({ code: l, href: routes[l].home, curren
         ))}
       </ol>
       <p class="footnote">{c.projects.note}</p>
+      <figure class="reference" data-reveal>
+        <blockquote><p>{c.ui.quoteOpen}{c.projects.reference.quote}{c.ui.quoteClose}</p></blockquote>
+        <figcaption>{c.projects.reference.source}</figcaption>
+      </figure>
     </section>
 
     <section id={c.speaker.id} aria-labelledby="speaker-title">
@@ -189,49 +325,73 @@ const langs = availableLangs.map((l) => ({ code: l, href: routes[l].home, curren
 
       <h2 id={c.certs.id} class="section-title section-title-sub">{c.certs.title}</h2>
       <div class="certs">
-        {c.certs.categories.map((cat) => (
+        {certsMain.map((cat) => (
           <div class="cert-group">
             <h3 class="cert-group-title">
               {cat.name}
               {cat.note && <span>{cat.note}</span>}
             </h3>
-            <div>
-              <ul class="cert-rows" role="list">
-                {cat.items.map((item) => (
-                  <li>
-                    <span class="cert-name">
-                      {item.url ? (
-                        <a href={item.url}>{item.name}<span aria-hidden="true">&nbsp;↗</span><span class="visually-hidden"> {c.ui.externalHint}</span></a>
-                      ) : item.name}
-                      {item.issuer && <span class="cert-issuer">{item.issuer}</span>}
-                    </span>
-                    <span class="cert-year">{item.year}</span>
-                  </li>
-                ))}
-              </ul>
-              {cat.extras?.map((group) => (
-                <div class="cert-extras">
-                  <p class="cert-extras-label">{group.label}</p>
-                  <ul role="list">
-                    {group.items.map((x) => <li>{x}</li>)}
-                  </ul>
-                </div>
+            <ul class="cert-rows" role="list">
+              {cat.items.map((item) => (
+                <li>
+                  <span class="cert-name">
+                    {item.url ? (
+                      <a href={item.url}>{item.name}<span aria-hidden="true">&nbsp;↗</span><span class="visually-hidden"> {c.ui.externalHint}</span></a>
+                    ) : item.name}
+                    {item.issuer && <span class="cert-issuer">{item.issuer}</span>}
+                  </span>
+                  <span class="cert-year">{item.year}</span>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         ))}
-        <div class="cert-group">
-          <h3 class="cert-group-title">{c.certs.other.name}</h3>
-          <ul class="cert-extras cert-extras-only" role="list">
-            {c.certs.other.items.map((x) => <li>{x}</li>)}
-          </ul>
-        </div>
       </div>
+      <details class="certs-more">
+        <summary>{c.certs.more}</summary>
+        <div class="certs">
+          {certsMore.map((cat) => (
+            <div class="cert-group">
+              <h3 class="cert-group-title">
+                {cat.name}
+                {cat.note && <span>{cat.note}</span>}
+              </h3>
+              <div>
+                {cat.items.length > 0 && (
+                  <ul class="cert-rows" role="list">
+                    {cat.items.map((item) => (
+                      <li>
+                        <span class="cert-name">{item.name}</span>
+                        <span class="cert-year">{item.year}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {cat.extras?.map((group) => (
+                  <div class={cat.items.length > 0 ? 'cert-extras' : 'cert-extras cert-extras-first'}>
+                    <p class="cert-extras-label">{group.label}</p>
+                    <ul role="list">
+                      {group.items.map((x) => <li>{x}</li>)}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+          <div class="cert-group">
+            <h3 class="cert-group-title">{c.certs.other.name}</h3>
+            <ul class="cert-extras cert-extras-only" role="list">
+              {c.certs.other.items.map((x) => <li>{x}</li>)}
+            </ul>
+          </div>
+        </div>
+      </details>
       <p class="footnote">{c.certs.note}</p>
     </section>
 
     <section id={c.product.id} aria-labelledby="product-title">
       <h2 id="product-title" class="section-title">{c.product.title}</h2>
+      <p class="section-intro">{c.product.intro}</p>
       <div class="products hover-group">
         {c.product.items.map((p) => (
           <div class="tile product">
@@ -314,6 +474,76 @@ const langs = availableLangs.map((l) => ({ code: l, href: routes[l].home, curren
   addEventListener('scroll', onScroll, { passive: true });
   addEventListener('resize', onScroll);
   markActive();
+
+  // Scroll reveal and count-up, only with motion allowed. Without JS everything is visible.
+  if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const countUp = (el: HTMLElement) => {
+      const m = (el.dataset.count ?? '').match(/^(\D*)(\d+)(.*)$/);
+      if (!m) return;
+      const [, pre, num, post] = m;
+      const target = Number(num);
+      const t0 = performance.now();
+      const step = (now: number) => {
+        const p = Math.min(1, (now - t0) / 1100);
+        el.textContent = `${pre}${Math.round(target * (1 - Math.pow(1 - p, 3)))}${post}`;
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+    root.classList.add('reveal-ready');
+    document.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => {
+      el.textContent = (el.dataset.count ?? '').replace(/\d+/, '0');
+    });
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          const el = e.target as HTMLElement;
+          el.classList.add('is-in');
+          el.querySelectorAll<HTMLElement>('[data-count]').forEach(countUp);
+          io.unobserve(el);
+        }
+      },
+      { rootMargin: '0px 0px -10% 0px' },
+    );
+    document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
+  }
+
+  // Services diagram: building blocks open a short explanation (one at a time)
+  const sysBlocks = [...document.querySelectorAll<HTMLButtonElement>('.sys-block')];
+  if (sysBlocks.length) {
+    const hint = document.querySelector<HTMLElement>('.sys-hint');
+    if (hint) hint.hidden = false;
+    const close = (focusBack = false) => {
+      const open = sysBlocks.find((b) => b.getAttribute('aria-expanded') === 'true');
+      if (!open) return;
+      open.setAttribute('aria-expanded', 'false');
+      const panel = document.getElementById(open.getAttribute('aria-controls') ?? '');
+      if (panel) panel.hidden = true;
+      open.closest('.sys-layer')?.classList.remove('has-open');
+      if (focusBack) open.focus();
+    };
+    sysBlocks.forEach((btn) => {
+      btn.disabled = false;
+      btn.addEventListener('click', () => {
+        const wasOpen = btn.getAttribute('aria-expanded') === 'true';
+        close();
+        if (wasOpen) return;
+        btn.setAttribute('aria-expanded', 'true');
+        const panel = document.getElementById(btn.getAttribute('aria-controls') ?? '');
+        if (panel) panel.hidden = false;
+        btn.closest('.sys-layer')?.classList.add('has-open');
+      });
+    });
+    document.querySelectorAll<HTMLButtonElement>('.sys-detail-close').forEach((b) => b.addEventListener('click', () => close(true)));
+    addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') close(true);
+    });
+  }
+
+  // Mobile menu: close after choosing a section
+  const mobileNav = document.getElementById('mobile-nav');
+  mobileNav?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => mobileNav.hidePopover?.()));
 
   // Easter egg: Kubernetes Invaders, loaded on demand (Konami code or the alien buttons)
   const launch = () => import('../scripts/invaders.js').then((m) => m.start());

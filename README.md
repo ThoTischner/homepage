@@ -1,6 +1,7 @@
 # tischner-itsystems.de
 
-Website of **Thomas Tischner IT Systems**, platform architecture for Kubernetes and AI/data platforms.
+Website of **Thomas Tischner IT Systems**: freelance IT architect and engineer, from the server to the AI platform
+(infrastructure, Kubernetes, GitOps, AI and data platforms).
 
 Static site built with [Astro](https://astro.build), deployed to GitHub Pages.
 No cookies, no tracking, no third-party requests.

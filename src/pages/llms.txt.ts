@@ -14,11 +14,33 @@ export const GET: APIRoute = async ({ site }) => {
 
 > ${en.meta.description}
 
-${contact.name} is a freelance platform architect based in Nuremberg, Germany. He designs and builds Kubernetes, AI and data platforms for enterprises and public-sector organisations in Germany, Austria and Switzerland, including regulated and air-gapped environments. Remote across Germany, Austria and Switzerland, on-site as needed. Languages: German, English.
+${contact.name} (${contact.company}) is a freelance IT architect and engineer based in Nuremberg, Germany, with more than 15 years in IT: from data center operations (servers, networking, storage, backup) through virtualization and automation to Kubernetes since 2016 and today data and AI platforms. He covers the whole stack, from a single Linux server to multi-cluster Kubernetes platforms and AI and data platforms, for enterprises and public-sector organisations in Germany, Austria and Switzerland, including regulated and air-gapped environments. He can own the whole stack or take on a specific specialist role: as architect, engineer or reinforcement for a team.
+
+## Key facts
+
+- Role: ${en.meta.jobTitle}, freelance, company "${contact.company}"
+- Location: Nuremberg, Germany. Works remote across Germany, Austria and Switzerland, on-site as needed (hybrid)
+- Experience: ${en.profile.stats.map((s) => `${s.value} ${s.label}`).join(', ')}
+- Key certifications: ${en.hero.badges.join(', ')}
+- Availability: on request
+- Languages: German, English
+
+## How he works (in his own words)
+
+${en.principles.items.map((p) => `- ${p.title}: ${p.text}`).join('\n')}
 
 ## Services
 
-${en.services.items.map((s) => `- ${s.title}: ${s.text}`).join('\n')}
+In his own words: ${en.services.intro}
+
+${en.services.items.map((s) => `- ${s.title} layer: ${s.blocks.map((b) => b.name).join(', ')}`).join('\n')}
+- Cross-cutting: ${en.services.pillars.join(', ')}
+- Serves: ${en.services.users.map((u) => `${u.name} (${u.text})`).join('; ')}
+- ${en.services.acrossLabel}: ${en.services.across.map((r) => r.title).join(', ')}
+
+## Technologies
+
+${en.tech.groups.map((g) => `- ${g.group}: ${g.items.join(', ')}`).join('\n')}
 
 ## Selected projects (clients anonymised)
 

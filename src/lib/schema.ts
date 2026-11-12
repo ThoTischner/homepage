@@ -28,6 +28,22 @@ const KNOWS_ABOUT = [
   'Kubernetes Security',
   'Observability',
   'Cloud Architecture',
+  'IT Architecture',
+  'Linux',
+  'Virtualization',
+  'Storage',
+  'Backup and Recovery',
+  'Network Security',
+  'Infrastructure as Code',
+  'Air-gapped Environments',
+  'Data Platforms',
+  'Event Streaming',
+  'GPU Infrastructure',
+];
+
+// Technologies from the page, without qualifiers in brackets, merged with the topics above
+const knowsAbout = (c: ReturnType<typeof t>) => [
+  ...new Set([...KNOWS_ABOUT, ...c.tech.groups.flatMap((g) => g.items.map((i) => i.replace(/\s*\(.*\)$/, '')))]),
 ];
 
 export async function homeSchema(lang: Lang, site: URL) {
@@ -54,13 +70,14 @@ export async function homeSchema(lang: Lang, site: URL) {
         name: contact.name,
         givenName: 'Thomas',
         familyName: 'Tischner',
-        jobTitle: c.hero.role,
+        jobTitle: c.meta.jobTitle,
+        alternateName: contact.company,
         description: c.meta.description,
         url: home,
         image: new URL(image.src, site).href,
         address,
         worksFor: { '@id': business },
-        knowsAbout: KNOWS_ABOUT,
+        knowsAbout: knowsAbout(c),
         knowsLanguage: ['de', 'en'],
         sameAs: [contact.linkedin, contact.github, ...(credly ? [credly] : [])],
         hasCredential: c.certs.categories.flatMap((cat) =>
@@ -81,14 +98,14 @@ export async function homeSchema(lang: Lang, site: URL) {
         founder: { '@id': person },
         address,
         areaServed: ['Germany', 'Austria', 'Switzerland'].map((name) => ({ '@type': 'Country', name })),
-        knowsAbout: KNOWS_ABOUT,
+        knowsAbout: knowsAbout(c),
         sameAs: [contact.linkedin],
         hasOfferCatalog: {
           '@type': 'OfferCatalog',
           name: c.services.title,
           itemListElement: c.services.items.map((s) => ({
             '@type': 'Offer',
-            itemOffered: { '@type': 'Service', name: s.title, description: s.text, provider: { '@id': business } },
+            itemOffered: { '@type': 'Service', name: s.title, description: s.blocks.map((b) => b.name.replace(/\u00AD/g, '')).join(', '), provider: { '@id': business } },
           })),
         },
       },
