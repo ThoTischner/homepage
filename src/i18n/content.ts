@@ -39,7 +39,7 @@ export const mailto = (subject: string) =>
 
 const de = {
   meta: {
-    title: 'IT-Architekt & Kubernetes-Engineer | Thomas Tischner IT Systems',
+    title: 'IT-Architekt & Engineer: vom Server bis zur KI-Plattform | Thomas Tischner',
     description:
       'Freiberuflicher IT-Architekt & Engineer aus Nürnberg. 15+ Jahre IT vom Server bis zur KI-Plattform: Infrastruktur, Kubernetes, GitOps, KI- und Datenplattformen.',
     ogAlt: 'Thomas Tischner IT Systems: IT-Architekt & Engineer vom Server bis zur KI-Plattform',
@@ -440,7 +440,7 @@ const de = {
       items: [
         'English Certificate (2026)',
         'JSON Path – Course Completion (2020)',
-        'Elektronisch unterwiesene Person (EUP, 2015)',
+        'Elektrotechnisch unterwiesene Person (EuP, 2015)',
         'Projektmanagement Basic (2014)',
       ],
     },
@@ -536,7 +536,7 @@ const tr = (label: string) => enLabels[label] ?? label;
 
 const en: SiteContent = {
   meta: {
-    title: 'IT Architect & Kubernetes Engineer | Thomas Tischner IT Systems',
+    title: 'IT Architect & Engineer: from the server to the AI platform | Thomas Tischner',
     description:
       'Freelance IT architect & engineer from Nuremberg, Germany. 15+ years in IT, from servers to AI platforms: infrastructure, Kubernetes, GitOps, AI and data platforms.',
     ogAlt: 'Thomas Tischner IT Systems: IT architect & engineer from the server to the AI platform',
@@ -709,7 +709,7 @@ const en: SiteContent = {
         title: 'Real-time streaming',
         sector: 'Vehicle manufacturing',
         period: '2023–2026',
-        metrics: [{ value: '1–9 M', label: 'events per day' }],
+        metrics: [{ value: '1–9', label: 'million events per day' }],
         text: 'Confluent Kafka platform for safety-relevant production data, with separate Rancher clusters per stage and end-to-end monitoring. Deployments via Helm, Fleet and GitHub Actions.',
         stack: ['Confluent Kafka', 'Rancher', 'Fleet', 'Helm', 'GitHub Actions'],
       },
