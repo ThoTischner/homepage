@@ -2,13 +2,14 @@
 import Base from '../../../layouts/Base.astro';
 import PostList from '../../../components/PostList.astro';
 import { t, routes } from '../../../i18n/content';
-import { getPosts } from '../../../lib/blog';
+import { getPosts, blogIndexSchema } from '../../../lib/blog';
 
 const c = t('en');
 const posts = await getPosts();
+const schema = blogIndexSchema(posts, 'en', Astro.site!);
 ---
 
-<Base lang="en" title={c.blog.indexTitle} description={c.blog.indexDescription} alternates={{ de: routes.de.blog }}>
+<Base lang="en" title={c.blog.indexTitle} description={c.blog.indexDescription} alternates={{ de: routes.de.blog }} schema={schema}>
   <link slot="head" rel="alternate" type="application/rss+xml" title="Thomas Tischner – Blog" href="/blog/rss.xml" />
   <section class="blog">
     <div class="container">

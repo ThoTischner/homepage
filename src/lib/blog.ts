@@ -79,3 +79,51 @@ export function articleSchema(post: Post, site: URL) {
 
   return { '@context': 'https://schema.org', '@graph': graph };
 }
+
+/** Structured data for the blog index: the page, the blog with its articles, breadcrumbs. */
+export function blogIndexSchema(posts: Post[], lang: 'de' | 'en', site: URL) {
+  const c = t(lang);
+  const pageUrl = new URL(routes[lang].blog, site).href;
+  const blogId = new URL(`${routes.de.blog}#blog`, site).href;
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'CollectionPage',
+        '@id': pageUrl,
+        url: pageUrl,
+        name: c.blog.indexTitle,
+        description: c.blog.indexDescription,
+        inLanguage: lang,
+        isPartOf: { '@id': new URL('/#website', site).href },
+        mainEntity: { '@id': blogId },
+      },
+      {
+        '@type': 'Blog',
+        '@id': blogId,
+        url: new URL(routes.de.blog, site).href,
+        name: `Blog – ${contact.company}`,
+        description: t('de').blog.indexDescription,
+        // Articles are written in German
+        inLanguage: 'de',
+        author: { '@id': new URL('/#person', site).href },
+        publisher: { '@id': new URL('/#business', site).href },
+        blogPost: posts.map((post) => ({
+          '@type': 'TechArticle',
+          '@id': `${new URL(postUrl(post), site).href}#article`,
+          headline: post.data.title,
+          url: new URL(postUrl(post), site).href,
+          datePublished: post.data.pubDate.toISOString(),
+          dateModified: (post.data.updated ?? post.data.pubDate).toISOString(),
+        })),
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: c.blog.breadcrumbHome, item: new URL(routes[lang].home, site).href },
+          { '@type': 'ListItem', position: 2, name: 'Blog', item: pageUrl },
+        ],
+      },
+    ],
+  };
+}

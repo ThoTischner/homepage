@@ -476,7 +476,7 @@ const de = {
     title: 'Artikel',
     intro: 'Praxiswissen zu Kubernetes-Plattformen, GitOps, Security und KI-Infrastruktur.',
     all: 'Alle Artikel',
-    indexTitle: 'Blog: Kubernetes, Plattform-Engineering und KI-Infrastruktur',
+    indexTitle: 'Blog: Kubernetes, Plattformen & KI | Thomas Tischner IT Systems',
     indexDescription:
       'Fachartikel von Thomas Tischner zu Kubernetes, Crossplane, Terraform, Argo CD, Istio, KServe und dem Betrieb in abgeschotteten Umgebungen.',
     note: '',
@@ -850,7 +850,7 @@ const en: SiteContent = {
     title: 'Articles',
     intro: 'Hands-on knowledge on Kubernetes platforms, GitOps, security and AI infrastructure.',
     all: 'All articles',
-    indexTitle: 'Blog: Kubernetes, platform engineering and AI infrastructure',
+    indexTitle: 'Blog: Kubernetes, platforms & AI | Thomas Tischner IT Systems',
     indexDescription:
       'Articles by Thomas Tischner on Kubernetes, Crossplane, Terraform, Argo CD, Istio, KServe and operations in air-gapped environments (in German).',
     note: 'Articles are written in German.',
