@@ -285,10 +285,14 @@ html:has(.topbar) {
   top: 0;
   z-index: 40;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--bg) 94%, transparent), color-mix(in srgb, var(--bg) 86%, transparent));
+  background: linear-gradient(180deg, color-mix(in srgb, var(--bg) 97%, transparent), color-mix(in srgb, var(--bg) 93%, transparent));
   backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
   box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.04), 0 8px 24px -16px rgba(0, 0, 0, 0.6);
+}
+
+/* Near-black: the strongest contrast on the page (beats the generic .theme-dark tokens) */
+.topbar.theme-dark {
+  --bg: #070707;
 }
 
 .topbar-inner {
@@ -577,7 +581,6 @@ html:has(.topbar) {
 .portrait-popover::backdrop {
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
 }
 
 .portrait-close {
@@ -586,7 +589,6 @@ html:has(.topbar) {
   right: 0.75rem;
   background: color-mix(in srgb, var(--bg) 75%, transparent);
   backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -694,7 +696,6 @@ html:has(.topbar) {
 .mobile-nav::backdrop {
   background: rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
 }
 
 .mobile-nav-head {
@@ -1043,7 +1044,6 @@ html:has(.band) {
   border-radius: 18px;
   background: linear-gradient(140deg, var(--glass-a), var(--glass-b));
   backdrop-filter: blur(18px) saturate(170%);
-  -webkit-backdrop-filter: blur(18px) saturate(170%);
   box-shadow:
     inset 0 1px 0 var(--glass-hi),
     inset 0 -1px 0 var(--glass-lo),
@@ -1613,7 +1613,6 @@ html:has(.band) {
   border-radius: 999px;
   background: rgba(9, 9, 11, 0.72);
   backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   color: #ededed;
   font-size: 0.8125rem;
   font-weight: 500;
