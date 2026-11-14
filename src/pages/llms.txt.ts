@@ -20,7 +20,7 @@ ${contact.name} (${contact.company}) is a freelance IT architect and engineer ba
 
 - Role: ${en.meta.jobTitle}, freelance, company "${contact.company}"
 - Location: Nuremberg, Germany. Works remote across Germany, Austria and Switzerland, on-site as needed (hybrid)
-- Experience: ${en.profile.stats.map((s) => `${s.value} ${s.label}`).join(', ')}
+- Experience: ${en.focus.stats.map((s) => `${s.value} ${s.label}`).join(', ')}
 - Key certifications: ${en.hero.badges.join(', ')}
 - Availability: on request
 - Languages: German, English

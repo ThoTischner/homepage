@@ -16,9 +16,9 @@ const { alt, openLabel, closeLabel } = Astro.props;
   <Image
     src={portrait}
     alt={alt}
-    width={160}
-    widths={[160, 240]}
-    sizes="80px"
+    width={320}
+    widths={[224, 320, 400]}
+    sizes="(min-width: 1024px) 160px, 112px"
     class="portrait"
     loading="eager"
     fetchpriority="high"

@@ -8,6 +8,13 @@ import Obf from './Obf.astro';
 import ProtectedLink from './ProtectedLink.astro';
 import { Image } from 'astro:assets';
 import speakerImg from '../assets/speaker.jpg';
+import BandMedia from './BandMedia.astro';
+import bgHero from '../assets/bg/hero.jpg';
+import bgProjects from '../assets/bg/projects.jpg';
+import bgTimeline from '../assets/bg/timeline.jpg';
+import bgPrinciples from '../assets/bg/principles.jpg';
+import bgCerts from '../assets/bg/certs.jpg';
+import bgBlog from '../assets/bg/blog.jpg';
 import { t, contact, mailto, routes, availableLangs, type Lang } from '../i18n/content';
 
 interface Props {
@@ -18,7 +25,19 @@ const { lang } = Astro.props;
 const c = t(lang);
 const mail = mailto(c.ui.mailSubject);
 const latestPosts = (await getPosts()).slice(0, 3);
+// Reference quote: **…** segments are highlighted (odd indices after the split)
+const quoteParts = c.projects.reference.quote.split(/\*\*(.+?)\*\*/);
 // Language switch: all available languages, current one marked
+// Key figures: years -> career, projects -> projects, certifications -> certifications
+const statTargets = [c.timeline.id, c.projects.id, c.certs.id];
+// Stack as layers, top to bottom like the services diagram: application, platform, foundation
+const stackLayers = [
+  { num: '03', title: c.services.items[2].title, groups: c.tech.groups.slice(8, 12) },
+  { num: '02', title: c.services.items[1].title, groups: c.tech.groups.slice(4, 8) },
+  { num: '01', title: c.services.items[0].title, groups: c.tech.groups.slice(0, 4) },
+];
+// Desktop header shows the main sections; the menu sheet lists all of them
+const topNav = c.nav.filter((item) => !('secondary' in item && item.secondary));
 const langs = availableLangs.map((l) => ({ code: l, href: routes[l].home, current: l === lang }));
 // Certifications: the main list shows the key ones, everything else sits behind <details>
 const certsMain = c.certs.categories
@@ -29,11 +48,38 @@ const certsMore = c.certs.categories
   .filter((cat) => cat.items.length > 0 || cat.extras?.length);
 ---
 
-<div class="layout">
-  {/* Mobile: table of contents behind a menu button (native popover, works without JS) */}
-  <button class="menu-toggle" type="button" popovertarget="mobile-nav" aria-label={c.ui.menuOpen} title={c.ui.menuOpen}>
-    <span class="menu-icon" aria-hidden="true"><span></span><span></span><span></span></span>
-  </button>
+<div class="home">
+  {/* Top bar: brand, section navigation, language, primary action. Sticky on all screens. */}
+  <header class="topbar theme-dark">
+    <div class="topbar-inner">
+      <a class="topbar-brand" href={routes[lang].home}>{c.hero.name} <span>IT Systems</span></a>
+      <nav class="topnav" aria-label={c.ui.navLabel}>
+        <ul role="list">
+          {topNav.map((item) => (
+            <li><a href={item.href} data-toc={item.href.slice(1)}>{item.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+      <div class="topbar-actions">
+        {langs.length > 1 && (
+          <nav class="lang-toggle" aria-label={c.ui.langLabel}>
+            {langs.map((l) =>
+              l.current ? (
+                <span aria-current="true">{l.code.toUpperCase()}</span>
+              ) : (
+                <a href={l.href} hreflang={l.code} lang={l.code} aria-label={t(l.code).ui.langName}>{l.code.toUpperCase()}</a>
+              ),
+            )}
+          </nav>
+        )}
+        <ProtectedLink class="pill pill-solid pill-sm topbar-cta" href={mail} fallback={`#${c.contactSection.id}`}>{c.hero.cta}</ProtectedLink>
+        {/* Smaller screens: full table of contents behind a menu button (native popover, works without JS) */}
+        <button class="menu-toggle" type="button" popovertarget="mobile-nav" aria-label={c.ui.menuOpen} title={c.ui.menuOpen}>
+          <span class="menu-icon" aria-hidden="true"><span></span><span></span><span></span></span>
+        </button>
+      </div>
+    </div>
+  </header>
   <nav id="mobile-nav" class="mobile-nav" popover aria-label={c.ui.navLabel}>
     <div class="mobile-nav-head">
       <span class="mobile-nav-brand">{c.hero.name} <span>IT Systems</span></span>
@@ -46,78 +92,185 @@ const certsMore = c.certs.categories
     </ul>
   </nav>
 
-  {/* Left column: sticky on desktop */}
-  <header class="intro">
-    <div>
-      <div class="intro-top">
-        <Portrait alt={c.hero.portraitAlt} openLabel={c.hero.portraitOpen} closeLabel={c.hero.portraitClose} />
-        <div class="intro-meta">
-          <p class="eyebrow">{c.hero.eyebrow}</p>
-          <p class="availability"><span class="availability-dot" aria-hidden="true"></span>{c.hero.availability}</p>
-        </div>
-        {langs.length > 1 && (
-          <nav class="lang-toggle" aria-label={c.ui.langLabel}>
-            {langs.map((l) =>
-              l.current ? (
-                <span aria-current="true">{l.code.toUpperCase()}</span>
-              ) : (
-                <a href={l.href} hreflang={l.code} lang={l.code} aria-label={t(l.code).ui.langName}>{l.code.toUpperCase()}</a>
-              ),
-            )}
-          </nav>
-        )}
-      </div>
-      <h1 class="display"><span class="sheen">{c.hero.name}</span> <span class="display-brand">IT Systems</span></h1>
-      <p class="role">{c.hero.role}</p>
-      <p class="pitch">{c.hero.pitch}</p>
-      <ul class="facts" role="list" aria-label={c.hero.badgesLabel}>
-        {c.hero.badges.map((b) => <li>{b}</li>)}
-      </ul>
-      <div class="actions">
-        <ProtectedLink class="pill pill-solid" href={mail} fallback={`#${c.contactSection.id}`}>{c.hero.cta}</ProtectedLink>
-        <a class="pill pill-ghost" href={contact.linkedin} rel="me">LinkedIn <span aria-hidden="true">↗</span></a>
-        <a class="pill pill-ghost" href={contact.github} rel="me">{c.hero.secondary} <span aria-hidden="true">↗</span></a>
-        <a class="pill pill-ghost" href={contact.aiCamp}>{contact.aiCampLabel} <span aria-hidden="true">↗</span></a>
-        <button class="pill pill-ghost pill-icon" type="button" data-game hidden aria-label={c.ui.playGame} title={c.ui.playGame}>
-          <AlienIcon />
-        </button>
-      </div>
-    </div>
-    <nav class="toc" aria-label={c.ui.navLabel}>
-      <ul role="list">
-        {c.nav.map((item) => (
-          <li><a href={item.href} data-toc={item.href.slice(1)}><span class="toc-line" aria-hidden="true"></span>{item.label}</a></li>
-        ))}
-      </ul>
-    </nav>
-  </header>
-
-  {/* Right column: content */}
   <main id="main" class="content" tabindex="-1">
-    <section id={c.profile.id} aria-labelledby="profile-title">
-      <h2 id="profile-title" class="section-title">{c.profile.title}</h2>
-      <p class="statement"><strong>{c.profile.lead}</strong> {c.profile.rest}</p>
-      <dl class="profile-stats" data-reveal>
-        {c.profile.stats.map((st) => (
-          <div>
-            <dt>{st.label}</dt>
-            <dd class="sheen" data-count={st.value}>{st.value}</dd>
+    {/* Hero: who and what on the left, proof (figures + client voice) on the right */}
+    <section id={c.focus.id} class="hero band theme-dark" aria-labelledby="hero-title">
+      <div class="hero-text">
+        {/* Who: portrait with role, location and availability. The name sits in the top bar. */}
+        <div class="intro-top">
+          <Portrait alt={c.hero.portraitAlt} openLabel={c.hero.portraitOpen} closeLabel={c.hero.portraitClose} />
+          <div class="intro-meta">
+            <p class="role">{c.hero.role}</p>
+            <p class="eyebrow">{c.hero.eyebrow}</p>
+            <p class="availability"><span class="availability-dot" aria-hidden="true"></span>{c.hero.availability}</p>
           </div>
-        ))}
-      </dl>
-      <h3 class="profile-focus-title">{c.profile.pathTitle}</h3>
-      <ol class="profile-path" role="list">
-        {c.profile.path.map((step) => (
-          <li class={step.year ? undefined : 'no-year'}>
-            <span class="profile-path-year">{step.year}</span>
-            <span class="profile-path-text">{step.text}</span>
-          </li>
-        ))}
-      </ol>
+        </div>
+        <h1 id="hero-title" class="claim"><span class="claim-lead">{c.focus.lead}</span> <span class="claim-rest">{c.focus.rest}</span></h1>
+        <ul class="facts" role="list" aria-label={c.hero.badgesLabel}>
+          {c.hero.badges.map((b) => <li>{b}</li>)}
+        </ul>
+        <div class="actions">
+          <ProtectedLink class="pill pill-solid" href={mail} fallback={`#${c.contactSection.id}`}>{c.hero.cta}</ProtectedLink>
+          <a class="pill pill-ghost" href={contact.linkedin} rel="me">LinkedIn <span aria-hidden="true">↗</span></a>
+          <a class="pill pill-ghost" href={contact.github} rel="me">{c.hero.secondary} <span aria-hidden="true">↗</span></a>
+          <a class="pill pill-ghost" href={contact.aiCamp}>{contact.aiCampLabel} <span aria-hidden="true">↗</span></a>
+          <button class="pill pill-ghost pill-icon" type="button" data-game hidden aria-label={c.ui.playGame} title={c.ui.playGame}>
+            <AlienIcon />
+          </button>
+        </div>
+      </div>
+      {/* Proof: key figures and a client voice, kept together in one card */}
+      <div class="proof" data-reveal>
+        {/* Key figures link to the sections that back them up */}
+        <ul class="proof-stats" role="list">
+          {c.focus.stats.map((st, i) => (
+            <li>
+              <a class="proof-stat" href={`#${statTargets[i]}`}>
+                <span class="proof-num sheen" data-count={st.value}>{st.value}</span>
+                <span class="proof-label">{st.label}<span class="proof-arrow" aria-hidden="true"> →</span></span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <figure class="reference">
+          <svg class="reference-mark" viewBox="0 0 32 24" aria-hidden="true">
+            <path d="M0 24V14C0 6.3 4.2 1.6 12 0l1.4 3.2C9 4.7 6.9 7.4 6.6 11H12v13H0Zm19 0V14c0-7.7 4.2-12.4 12-14l1 3.2C27.6 4.7 25.5 7.4 25.2 11H31v13H19Z" />
+          </svg>
+          <blockquote>
+            <p>{quoteParts.map((part, i) => (i % 2 ? <strong>{part}</strong> : part))}</p>
+          </blockquote>
+          <figcaption>{c.projects.reference.source}</figcaption>
+        </figure>
+      </div>
+      <BandMedia src={bgHero} eager />
     </section>
 
-    <section id={c.services.id} aria-labelledby="services-title">
+    {/* Typical situations: full width, one column per situation on wide screens */}
+    <section class="situations-band band" aria-labelledby="situations-title">
+      <h2 id="situations-title" class="kicker">{c.focus.problemsLabel}</h2>
+      {/* Each card: animated icon, the problem, a connector that draws itself, then the answer */}
+      <ul class="situations" role="list" data-reveal>
+        {c.focus.problems.map((pr, i) => (
+          <li class="situation glass">
+            <div class="situation-top">
+              <span class="situation-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              {i === 0 && (
+                <svg class="situation-icon icon-grow" viewBox="0 0 48 48" aria-hidden="true">
+                  <path class="axis" d="M6 42h36" />
+                  <rect class="b b1" x="9" y="30" width="6" height="12" rx="1.5" />
+                  <rect class="b b2" x="19" y="22" width="6" height="20" rx="1.5" />
+                  <rect class="b b3" x="29" y="12" width="6" height="30" rx="1.5" />
+                  <path class="trend" d="M8 26 20 18l9 4 12-12" />
+                  <path class="trend-tip" d="M35 10h6v6" />
+                </svg>
+              )}
+              {i === 1 && (
+                <svg class="situation-icon icon-gap" viewBox="0 0 48 48" aria-hidden="true">
+                  <path class="shield" d="M24 5 39 11v11c0 10-6.5 17-15 21C15.5 39 9 32 9 22V11Z" />
+                  <rect class="lock" x="18" y="22" width="12" height="9" rx="1.8" />
+                  <path class="shackle" d="M20.5 22v-3a3.5 3.5 0 0 1 7 0v3" />
+                  <path class="cut cut-l" d="M1 25h5" />
+                  <path class="cut cut-r" d="M42 25h5" />
+                </svg>
+              )}
+              {i === 2 && (
+                <svg class="situation-icon icon-chip" viewBox="0 0 48 48" aria-hidden="true">
+                  <rect class="die" x="12" y="12" width="24" height="24" rx="3" />
+                  <rect class="core" x="18" y="18" width="12" height="12" rx="1.5" />
+                  <path class="pins" d="M17 6v6M24 6v6M31 6v6M17 36v6M24 36v6M31 36v6M6 17h6M6 24h6M6 31h6M36 17h6M36 24h6M36 31h6" />
+                </svg>
+              )}
+              {i === 3 && (
+                <svg class="situation-icon icon-boost" viewBox="0 0 48 48" aria-hidden="true">
+                  <path class="bolt" d="M27 4 11 27h11l-3 17 18-25H26Z" />
+                  <path class="spark s1" d="M40 8l3-3" />
+                  <path class="spark s2" d="M42 16h4" />
+                  <path class="spark s3" d="M6 36l-3 3" />
+                </svg>
+              )}
+            </div>
+            <h3>{pr.title}</h3>
+            <span class="situation-link" aria-hidden="true"></span>
+            <p>{pr.text}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section id={c.principles.id} class="band theme-dark" aria-labelledby="principles-title">
+      <h2 id="principles-title" class="section-title">{c.principles.title}</h2>
+      <ul class="principles" role="list">
+        {c.principles.items.map((p, i) => (
+          <li class="principle" data-reveal>
+            <div class="principle-head">
+              {i === 0 && (
+                <svg class="principle-icon icon-auto" viewBox="0 0 40 40" aria-hidden="true">
+                  <g class="spin">
+                    <path d="M31 14a12 12 0 0 0-21.5-1.5" />
+                    <path d="M9 26a12 12 0 0 0 21.5 1.5" />
+                    <path d="M9.5 6.5v6h6" />
+                    <path d="M30.5 33.5v-6h-6" />
+                  </g>
+                  <rect x="16" y="16" width="8" height="8" rx="1.5" />
+                </svg>
+              )}
+              {i === 1 && (
+                <svg class="principle-icon icon-ha" viewBox="0 0 40 40" aria-hidden="true">
+                  <path d="M14 20h12" class="link" />
+                  <circle cx="9" cy="20" r="5" class="node node-a" />
+                  <circle cx="31" cy="20" r="5" class="node node-b" />
+                </svg>
+              )}
+              {i === 2 && (
+                <svg class="principle-icon icon-scale" viewBox="0 0 40 40" aria-hidden="true">
+                  <path d="M5 34h30" />
+                  <rect class="bar bar-1" x="8" y="22" width="6" height="12" rx="1" />
+                  <rect class="bar bar-2" x="17" y="15" width="6" height="19" rx="1" />
+                  <rect class="bar bar-3" x="26" y="7" width="6" height="27" rx="1" />
+                </svg>
+              )}
+              <h3>{p.title}</h3>
+            </div>
+            <p>{p.text}</p>
+          </li>
+        ))}
+      </ul>
+      <BandMedia src={bgPrinciples} />
+    </section>
+
+    <section id={c.services.id} class="band" aria-labelledby="services-title">
       <h2 id="services-title" class="section-title">{c.services.title}</h2>
+      {/* Lifecycle and entry offer side by side on wide screens */}
+      <div class="offer-grid">
+        <div>
+          <h3 id="phases-title" class="kicker">{c.services.acrossLabel}</h3>
+          <ol class="phases" role="list" aria-labelledby="phases-title" data-reveal>
+            {c.services.across.map((r, i) => (
+              <li>
+                <span class="phase-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <h4>{r.title}</h4>
+                <p>{r.text}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+        {/* Entry offer: highlighted card with its own call to action */}
+        <div class="review" data-reveal>
+          <p class="review-label">{c.services.review.label}</p>
+          <h3>{c.services.review.title}</h3>
+          <p class="review-text">{c.services.review.text}</p>
+          <dl class="review-facts">
+            {c.services.review.facts.map((f) => (
+              <div>
+                <dt>{f.label}</dt>
+                <dd>{f.text}</dd>
+              </div>
+            ))}
+          </dl>
+          <ProtectedLink class="pill pill-solid" href={mailto(c.services.review.mailSubject)} fallback={`#${c.contactSection.id}`}>{c.services.review.cta}</ProtectedLink>
+        </div>
+      </div>
+      <h3 class="kicker kicker-spaced">{c.services.layersLabel}</h3>
       <p class="section-intro">{c.services.intro}</p>
       {/* System diagram: built bottom-up (foundation first). DOM order = build order, drawn bottom to top. */}
       <p class="sys-hint" hidden><span class="sys-hint-dot" aria-hidden="true"></span>{c.services.hint}</p>
@@ -180,62 +333,10 @@ const certsMore = c.certs.categories
         <p class="sys-pillar sys-pillar-right"><span>{c.services.pillars[1]}</span></p>
 
         <div class="sys-ground" aria-hidden="true"></div>
-        <figcaption class="sys-roles">
-          <p class="sys-tag">{c.services.acrossLabel}</p>
-          <ol class="sys-steps" role="list">
-            {c.services.across.map((r, i) => (
-              <li>
-                <span class="sys-step-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-                <h3>{r.title}</h3>
-                <p>{r.text}</p>
-              </li>
-            ))}
-          </ol>
-        </figcaption>
       </figure>
     </section>
 
-    <section id={c.principles.id} aria-labelledby="principles-title">
-      <h2 id="principles-title" class="section-title">{c.principles.title}</h2>
-      <ul class="principles" role="list">
-        {c.principles.items.map((p, i) => (
-          <li class="principle" data-reveal>
-            <div class="principle-head">
-              {i === 0 && (
-                <svg class="principle-icon icon-auto" viewBox="0 0 40 40" aria-hidden="true">
-                  <g class="spin">
-                    <path d="M31 14a12 12 0 0 0-21.5-1.5" />
-                    <path d="M9 26a12 12 0 0 0 21.5 1.5" />
-                    <path d="M9.5 6.5v6h6" />
-                    <path d="M30.5 33.5v-6h-6" />
-                  </g>
-                  <rect x="16" y="16" width="8" height="8" rx="1.5" />
-                </svg>
-              )}
-              {i === 1 && (
-                <svg class="principle-icon icon-ha" viewBox="0 0 40 40" aria-hidden="true">
-                  <path d="M14 20h12" class="link" />
-                  <circle cx="9" cy="20" r="5" class="node node-a" />
-                  <circle cx="31" cy="20" r="5" class="node node-b" />
-                </svg>
-              )}
-              {i === 2 && (
-                <svg class="principle-icon icon-scale" viewBox="0 0 40 40" aria-hidden="true">
-                  <path d="M5 34h30" />
-                  <rect class="bar bar-1" x="8" y="22" width="6" height="12" rx="1" />
-                  <rect class="bar bar-2" x="17" y="15" width="6" height="19" rx="1" />
-                  <rect class="bar bar-3" x="26" y="7" width="6" height="27" rx="1" />
-                </svg>
-              )}
-              <h3>{p.title}</h3>
-            </div>
-            <p>{p.text}</p>
-          </li>
-        ))}
-      </ul>
-    </section>
-
-    <section id={c.projects.id} aria-labelledby="projects-title">
+    <section id={c.projects.id} class="band theme-dark" aria-labelledby="projects-title">
       <h2 id="projects-title" class="section-title">{c.projects.title}</h2>
       <ol class="projects hover-group" role="list">
         {c.projects.items.map((p) => (
@@ -258,49 +359,52 @@ const certsMore = c.certs.categories
         ))}
       </ol>
       <p class="footnote">{c.projects.note}</p>
-      <figure class="reference" data-reveal>
-        <blockquote><p>{c.ui.quoteOpen}{c.projects.reference.quote}{c.ui.quoteClose}</p></blockquote>
-        <figcaption>{c.projects.reference.source}</figcaption>
-      </figure>
+      <BandMedia src={bgProjects} />
     </section>
 
-    <section id={c.speaker.id} aria-labelledby="speaker-title">
+    <section id={c.speaker.id} class="band" aria-labelledby="speaker-title">
       <h2 id="speaker-title" class="section-title">{c.speaker.title}</h2>
-      <figure class="speaker-photo">
-        <Image
-          src={speakerImg}
-          alt={c.speaker.imageAlt}
-          widths={[560, 840, 1120]}
-          sizes="(min-width: 1024px) 560px, 100vw"
-          loading="lazy"
-        />
-        <figcaption>{c.speaker.caption}</figcaption>
-      </figure>
-      <p class="statement"><strong>{c.speaker.lead}</strong> {c.speaker.rest}</p>
-      <h3 class="profile-focus-title">{c.speaker.topicsTitle}</h3>
-      <dl class="profile-focus">
-        {c.speaker.topics.map((topic) => (
-          <div>
-            <dt>{topic.title}</dt>
-            <dd>{topic.text}</dd>
+      <div class="speaker-grid">
+        <figure class="speaker-photo">
+          <Image
+            src={speakerImg}
+            alt={c.speaker.imageAlt}
+            widths={[560, 840, 1120]}
+            sizes="(min-width: 1200px) 420px, (min-width: 1024px) 640px, 100vw"
+            loading="lazy"
+          />
+          <figcaption>{c.speaker.caption}</figcaption>
+        </figure>
+        <div>
+          <p class="statement"><strong>{c.speaker.lead}</strong> {c.speaker.rest}</p>
+          <h3 class="profile-focus-title">{c.speaker.topicsTitle}</h3>
+          <dl class="profile-focus">
+            {c.speaker.topics.map((topic) => (
+              <div>
+                <dt>{topic.title}</dt>
+                <dd>{topic.text}</dd>
+              </div>
+            ))}
+          </dl>
+          <div class="speaker-cta">
+            <ul class="chips" role="list">
+              {c.speaker.formats.map((f) => <li>{f}</li>)}
+            </ul>
+            <ProtectedLink class="pill pill-solid" href={mailto(c.speaker.mailSubject)} fallback={`#${c.contactSection.id}`}>{c.speaker.cta}</ProtectedLink>
           </div>
-        ))}
-      </dl>
-      <div class="speaker-cta">
-        <ul class="chips" role="list">
-          {c.speaker.formats.map((f) => <li>{f}</li>)}
-        </ul>
-        <ProtectedLink class="pill pill-solid" href={mailto(c.speaker.mailSubject)} fallback={`#${c.contactSection.id}`}>{c.speaker.cta}</ProtectedLink>
+        </div>
       </div>
     </section>
 
-    <section id={c.timeline.id} aria-labelledby="timeline-title">
+    <section id={c.timeline.id} class="band theme-dark" aria-labelledby="timeline-title">
       <h2 id="timeline-title" class="section-title">{c.timeline.title}</h2>
-      <ol class="timeline hover-group" role="list">
-        {c.timeline.items.map((e) => (
-          <li class="tile">
+      {/* Timeline rail: newest at the top, the line grows upwards from the apprenticeship */}
+      <ol class="timeline" role="list" data-reveal>
+        {c.timeline.items.map((e, i) => (
+          <li class:list={['timeline-item', { 'is-now': i === 0 }]}>
             <p class="meta timeline-period">{e.period}</p>
-            <div>
+            <span class="timeline-dot" aria-hidden="true"></span>
+            <div class="timeline-body">
               <h3>{e.role}</h3>
               <p class="at">{e.org}</p>
               {e.text && <p>{e.text}</p>}
@@ -308,22 +412,36 @@ const certsMore = c.certs.categories
           </li>
         ))}
       </ol>
+      <BandMedia src={bgTimeline} career />
     </section>
 
-    <section id={c.tech.id} aria-labelledby="tech-title">
+    <section id={c.tech.id} class="band" aria-labelledby="tech-title">
       <h2 id="tech-title" class="section-title">{c.tech.title}</h2>
-      <div class="stack">
-        {c.tech.groups.map((g) => (
-          <div class="stack-group">
-            <h3>{g.group}</h3>
-            <ul class="chips" role="list">
-              {g.items.map((item) => <li>{item}</li>)}
-            </ul>
-          </div>
+      {/* Layered stack: builds up from the foundation when scrolled into view */}
+      <ol class="stack-layers" role="list" data-reveal>
+        {stackLayers.map((layer) => (
+          <li class="stack-layer">
+            <p class="stack-layer-tag"><span aria-hidden="true">{layer.num}</span> {layer.title}</p>
+            <div class="stack-cards">
+              {layer.groups.map((g) => (
+                <div class="stack-card glass tilt">
+                  <div class="stack-card-head">
+                    <h3>{g.group}</h3>
+                    <span class="stack-count" aria-hidden="true">{g.items.length}</span>
+                  </div>
+                  <ul class="chips" role="list">
+                    {g.items.map((item) => <li>{item}</li>)}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </li>
         ))}
-      </div>
+      </ol>
+    </section>
 
-      <h2 id={c.certs.id} class="section-title section-title-sub">{c.certs.title}</h2>
+    <section id={c.certs.id} class="band theme-dark" aria-labelledby="certs-title">
+      <h2 id="certs-title" class="section-title">{c.certs.title}</h2>
       <div class="certs">
         {certsMain.map((cat) => (
           <div class="cert-group">
@@ -387,9 +505,10 @@ const certsMore = c.certs.categories
         </div>
       </details>
       <p class="footnote">{c.certs.note}</p>
+      <BandMedia src={bgCerts} />
     </section>
 
-    <section id={c.product.id} aria-labelledby="product-title">
+    <section id={c.product.id} class="band" aria-labelledby="product-title">
       <h2 id="product-title" class="section-title">{c.product.title}</h2>
       <p class="section-intro">{c.product.intro}</p>
       <div class="products hover-group">
@@ -410,15 +529,16 @@ const certsMore = c.certs.categories
     </section>
 
     {latestPosts.length > 0 && (
-      <section id={c.blog.id} aria-labelledby="blog-title">
+      <section id={c.blog.id} class="band theme-dark" aria-labelledby="blog-title">
         <h2 id="blog-title" class="section-title">{c.blog.title}</h2>
         <p class="section-lead">{c.blog.intro} {c.blog.note}</p>
         <PostList posts={latestPosts} lang={lang} />
         <p><a class="link-all" href={routes[lang].blog}>{c.blog.all} →</a></p>
+        <BandMedia src={bgBlog} />
       </section>
     )}
 
-    <section id={c.contactSection.id} class="contact" aria-labelledby="contact-title">
+    <section id={c.contactSection.id} class="contact band" aria-labelledby="contact-title">
       <h2 id="contact-title" class="section-title">{c.contactSection.title}</h2>
       <p class="statement">{c.contactSection.text}</p>
       <ProtectedLink class="contact-mail sheen" href={mail} fallback={`#${c.contactSection.id}`}><Obf text={contact.email} /></ProtectedLink>
@@ -429,11 +549,13 @@ const certsMore = c.certs.categories
       <p class="meta">{c.contactSection.availability}</p>
     </section>
 
+    <div class="band band-footer theme-dark">
     <Footer lang={lang} inline>
       <button class="egg" type="button" data-game hidden aria-label={c.ui.playEgg} title="↑ ↑ ↓ ↓ ← → ← → B A">
         <AlienIcon />
       </button>
     </Footer>
+    </div>
   </main>
 </div>
 
@@ -460,7 +582,8 @@ const certsMore = c.certs.categories
   const markActive = () => {
     ticking = false;
     const atBottom = innerHeight + scrollY >= document.documentElement.scrollHeight - 4;
-    let current = sections[0];
+    // Nothing is marked while the hero is in view
+    let current: HTMLElement | null = null;
     if (atBottom) current = sections[sections.length - 1];
     else for (const s of sections) if (s.getBoundingClientRect().top <= innerHeight / 3) current = s;
     links.forEach((a, id) => (id === current?.id ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')));
@@ -538,6 +661,38 @@ const certsMore = c.certs.categories
     document.querySelectorAll<HTMLButtonElement>('.sys-detail-close').forEach((b) => b.addEventListener('click', () => close(true)));
     addEventListener('keydown', (e) => {
       if (e.key === 'Escape') close(true);
+    });
+  }
+
+  // Liquid glass: the specular highlight follows the pointer inside each card
+  if (matchMedia('(pointer: fine)').matches) {
+    document.querySelectorAll<HTMLElement>('.glass, .proof, .tile, .review, .cert-group').forEach((el) => {
+      el.addEventListener(
+        'pointermove',
+        (e) => {
+          const r = el.getBoundingClientRect();
+          el.style.setProperty('--gx', `${e.clientX - r.left}px`);
+          el.style.setProperty('--gy', `${e.clientY - r.top}px`);
+        },
+        { passive: true },
+      );
+    });
+  }
+
+  // Stack cards tilt slightly towards the pointer
+  if (matchMedia('(pointer: fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll<HTMLElement>('.tilt').forEach((el) => {
+      el.addEventListener('pointermove', (e) => {
+        const r = el.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        el.style.setProperty('--rx', `${(-y * 8).toFixed(2)}deg`);
+        el.style.setProperty('--ry', `${(x * 10).toFixed(2)}deg`);
+      });
+      el.addEventListener('pointerleave', () => {
+        el.style.setProperty('--rx', '0deg');
+        el.style.setProperty('--ry', '0deg');
+      });
     });
   }
 

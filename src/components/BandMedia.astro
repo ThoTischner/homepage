@@ -1,0 +1,31 @@
+---
+// Full-bleed background photo for a .band section. Decorative only (empty alt, aria-hidden).
+// An overlay in the band's own background colour keeps the text readable in light and dark bands.
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  src: ImageMetadata;
+  /** Invert the photo: turns dark motifs into a light blueprint look for light bands */
+  invert?: boolean;
+  /** Stronger overlay for busy sections (diagram, many chips) */
+  strong?: boolean;
+  /** First screen: load eagerly with high priority */
+  eager?: boolean;
+  /** Career band: lighter overlay so the earth at night stays visible */
+  career?: boolean;
+}
+
+const { src, invert = false, strong = false, eager = false, career = false } = Astro.props;
+---
+
+<div class:list={['band-media', { 'band-media--invert': invert, 'band-media--strong': strong, 'band-media--career': career }]} aria-hidden="true">
+  <Image
+    src={src}
+    alt=""
+    widths={[960, 1600, 2400]}
+    sizes="100vw"
+    loading={eager ? 'eager' : 'lazy'}
+    fetchpriority={eager ? 'high' : 'auto'}
+  />
+</div>
