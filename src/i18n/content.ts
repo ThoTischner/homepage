@@ -41,7 +41,7 @@ const de = {
   meta: {
     title: 'IT-Architekt & Engineer: vom Server bis zur KI-Plattform | Thomas Tischner',
     description:
-      'Freiberuflicher IT-Architekt & Engineer aus Nürnberg. 15+ Jahre IT vom Server bis zur KI-Plattform: Infrastruktur, Kubernetes, GitOps, KI- und Datenplattformen.',
+      'Freiberuflicher IT-Architekt aus Nürnberg: Architektur, Review und Umsetzung von Infrastruktur, Kubernetes, Cloud und KI-Plattformen. Auch air-gapped.',
     ogAlt: 'Thomas Tischner IT Systems: IT-Architekt & Engineer vom Server bis zur KI-Plattform',
     jobTitle: 'IT-Architekt & Engineer',
   },
@@ -638,7 +638,7 @@ const en: SiteContent = {
   meta: {
     title: 'IT Architect & Engineer: from the server to the AI platform | Thomas Tischner',
     description:
-      'Freelance IT architect & engineer from Nuremberg, Germany. 15+ years in IT, from servers to AI platforms: infrastructure, Kubernetes, GitOps, AI and data platforms.',
+      'Freelance IT architect from Nuremberg, Germany: architecture, review and delivery of infrastructure, Kubernetes, cloud and AI platforms. Air-gapped too.',
     ogAlt: 'Thomas Tischner IT Systems: IT architect & engineer from the server to the AI platform',
     jobTitle: 'IT Architect & Engineer',
   },

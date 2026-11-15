@@ -25,6 +25,19 @@ ${contact.name} (${contact.company}) is a freelance IT architect and engineer ba
 - Availability: on request
 - Languages: German, English
 
+## Positioning
+
+${en.focus.lead} ${en.focus.rest} (${en.focus.note})
+
+## Core expertise
+
+${en.tech.core.map((k) => `- ${k.name} (since ${k.since}): ${k.text}`).join('\n')}
+
+## Entry offer: ${en.services.review.title}
+
+${en.services.review.text}
+${en.services.review.facts.map((f) => `- ${f.label}: ${f.text}`).join('\n')}
+
 ## How he works (in his own words)
 
 ${en.principles.items.map((p) => `- ${p.title}: ${p.text}`).join('\n')}

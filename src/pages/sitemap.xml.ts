@@ -8,7 +8,7 @@ const LANGS = Object.keys(routes) as Lang[];
 const PAGES = Object.keys(routes.de) as (keyof typeof routes.de)[];
 // Last content change of the static pages: bump on changes so search engines recrawl them.
 // Also applies to articles when shared parts (author box, layout) change.
-const SITE_UPDATED = '2026-11-12';
+const SITE_UPDATED = '2026-11-15';
 
 export const GET: APIRoute = async ({ site }) => {
   const url = (path: string) => new URL(path, site).href;
