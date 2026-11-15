@@ -9,12 +9,13 @@ import ProtectedLink from './ProtectedLink.astro';
 import { Image } from 'astro:assets';
 import speakerImg from '../assets/speaker.jpg';
 import BandMedia from './BandMedia.astro';
+import { logos, logoBand } from '../data/logos';
 import bgHero from '../assets/bg/hero.jpg';
-import bgProjects from '../assets/bg/projects.jpg';
-import bgTimeline from '../assets/bg/timeline.jpg';
-import bgPrinciples from '../assets/bg/principles.jpg';
-import bgCerts from '../assets/bg/certs.jpg';
-import bgBlog from '../assets/bg/blog.jpg';
+import bgFibre from '../assets/bg/projects.jpg';
+import bgEarth from '../assets/bg/timeline.jpg';
+import bgCircuit from '../assets/bg/principles.jpg';
+import bgDisk from '../assets/bg/certs.jpg';
+import bgGpu from '../assets/bg/blog.jpg';
 import { t, contact, mailto, routes, availableLangs, type Lang } from '../i18n/content';
 
 interface Props {
@@ -30,14 +31,9 @@ const quoteParts = c.projects.reference.quote.split(/\*\*(.+?)\*\*/);
 // Language switch: all available languages, current one marked
 // Key figures: years -> career, projects -> projects, certifications -> certifications
 const statTargets = [c.timeline.id, c.projects.id, c.certs.id];
-// Stack as layers, top to bottom like the services diagram: application, platform, foundation
-const stackLayers = [
-  { num: '03', title: c.services.items[2].title, groups: c.tech.groups.slice(8, 12) },
-  { num: '02', title: c.services.items[1].title, groups: c.tech.groups.slice(4, 8) },
-  { num: '01', title: c.services.items[0].title, groups: c.tech.groups.slice(0, 4) },
-];
 // Desktop header shows the main sections; the menu sheet lists all of them
-const topNav = c.nav.filter((item) => !('secondary' in item && item.secondary));
+const topNav = c.nav.filter((item) => !('more' in item && item.more));
+const moreNav = c.nav.filter((item) => 'more' in item && item.more);
 const langs = availableLangs.map((l) => ({ code: l, href: routes[l].home, current: l === lang }));
 // Certifications: the main list shows the key ones, everything else sits behind <details>
 const certsMain = c.certs.categories
@@ -46,12 +42,13 @@ const certsMain = c.certs.categories
 const certsMore = c.certs.categories
   .map((cat) => ({ ...cat, items: cat.items.filter((i) => i.more) }))
   .filter((cat) => cat.items.length > 0 || cat.extras?.length);
+const thisYear = new Date().getFullYear();
 // Terminal easter egg: all output is prepared here and handed to the client as JSON
 const termData = {
   t: c.terminal,
   skills: [
     ['linux', 2008], ['netzwerk', 2008], ['storage', 2008], ['virtualisierung', 2011],
-    ['ansible', 2011], ['openshift', 2016], ['kubernetes', 2018], ['gitops', 2020],
+    ['ansible', 2013], ['openshift', 2016], ['kubernetes', 2018], ['gitops', 2020],
     ['kafka', 2021], ['ki-plattformen', 2021], ['llm-inference', 2024], ['ki-agenten', 2025],
   ],
   projects: c.projects.items.map((p) => [p.title, p.sector, p.period]),
@@ -70,6 +67,17 @@ const termData = {
           {topNav.map((item) => (
             <li><a href={item.href} data-toc={item.href.slice(1)}>{item.label}</a></li>
           ))}
+          <li>
+            {/* Everything else behind a small dropdown (native <details>, works without JS) */}
+            <details class="topnav-more">
+              <summary>{c.ui.moreLabel}<span class="topnav-caret" aria-hidden="true"></span></summary>
+              <ul class="topnav-panel" role="list">
+                {moreNav.map((item) => (
+                  <li><a href={item.href} data-toc={item.href.slice(1)}>{item.label}</a></li>
+                ))}
+              </ul>
+            </details>
+          </li>
         </ul>
       </nav>
       <div class="topbar-actions">
@@ -263,7 +271,7 @@ const termData = {
           </li>
         ))}
       </ul>
-      <BandMedia src={bgPrinciples} />
+      <BandMedia src={bgCircuit} />
     </section>
 
     <section id={c.services.id} class="band" aria-labelledby="services-title">
@@ -364,7 +372,57 @@ const termData = {
       </figure>
     </section>
 
-    <section id={c.projects.id} class="band theme-dark" aria-labelledby="projects-title">
+    <section id={c.tech.id} class="band theme-dark" aria-labelledby="tech-title">
+      <h2 id="tech-title" class="section-title">{c.tech.title}</h2>
+      {/* Logo sprite: each brand path once, referenced by <use> below */}
+      <svg class="logo-sprite" width="0" height="0" aria-hidden="true">
+        <defs>
+          {Object.entries(logos).map(([slug, l]) => (
+            <symbol id={`logo-${slug}`} viewBox="0 0 24 24"><path d={l.path} /></symbol>
+          ))}
+        </defs>
+      </svg>
+
+      {/* Core expertise as large tiles, all other tools as a logo band */}
+      <h3 class="kicker">{c.tech.coreTitle}</h3>
+      <ul class="core-grid" role="list" data-reveal>
+        {c.tech.core.map((item, i) => (
+          <li class="core-card glass tilt">
+            <div class="core-top">
+              <span class="core-logos" aria-hidden="true">
+                {item.logos.map((l) => <svg viewBox="0 0 24 24"><use href={`#logo-${l}`} /></svg>)}
+              </span>
+              {i === 0 && (
+                <button class="stack-egg" type="button" data-game hidden aria-label={c.ui.playGame} title={c.ui.playGame}>
+                  <AlienIcon />
+                </button>
+              )}
+            </div>
+            <h4>{item.name}</h4>
+            <p class="core-since">{c.tech.sinceLabel} {item.since} · {thisYear - item.since}+ {c.terminal.years}</p>
+            <p class="core-text">{item.text}</p>
+          </li>
+        ))}
+      </ul>
+
+      <h3 class="kicker kicker-spaced">{c.tech.bandTitle}</h3>
+      <div class="logo-band">
+        {[0, 1].map((copy) => (
+          <ul class="logo-track" role="list" aria-hidden={copy === 1 ? 'true' : undefined}>
+            {logoBand.map((slug) => (
+              <li>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><use href={`#logo-${slug}`} /></svg>
+                <span>{logos[slug].name}</span>
+              </li>
+            ))}
+          </ul>
+        ))}
+      </div>
+
+      <BandMedia src={bgFibre} />
+    </section>
+
+    <section id={c.projects.id} class="band" aria-labelledby="projects-title">
       <h2 id="projects-title" class="section-title">{c.projects.title}</h2>
       <ol class="projects hover-group" role="list">
         {c.projects.items.map((p) => (
@@ -387,10 +445,9 @@ const termData = {
         ))}
       </ol>
       <p class="footnote">{c.projects.note}</p>
-      <BandMedia src={bgProjects} />
     </section>
 
-    <section id={c.speaker.id} class="band" aria-labelledby="speaker-title">
+    <section id={c.speaker.id} class="band theme-dark" aria-labelledby="speaker-title">
       <h2 id="speaker-title" class="section-title">{c.speaker.title}</h2>
       <div class="speaker-grid">
         <figure class="speaker-photo">
@@ -422,9 +479,10 @@ const termData = {
           </div>
         </div>
       </div>
+      <BandMedia src={bgEarth} />
     </section>
 
-    <section id={c.timeline.id} class="band theme-dark" aria-labelledby="timeline-title">
+    <section id={c.timeline.id} class="band" aria-labelledby="timeline-title">
       <h2 id="timeline-title" class="section-title">{c.timeline.title}</h2>
       {/* Timeline rail: newest at the top, the line grows upwards from the apprenticeship */}
       <ol class="timeline" role="list" data-reveal>
@@ -436,37 +494,6 @@ const termData = {
               <h3>{e.role}</h3>
               <p class="at">{e.org}</p>
               {e.text && <p>{e.text}</p>}
-            </div>
-          </li>
-        ))}
-      </ol>
-      <BandMedia src={bgTimeline} career />
-    </section>
-
-    <section id={c.tech.id} class="band" aria-labelledby="tech-title">
-      <h2 id="tech-title" class="section-title">{c.tech.title}</h2>
-      {/* Layered stack: builds up from the foundation when scrolled into view */}
-      <ol class="stack-layers" role="list" data-reveal>
-        {stackLayers.map((layer) => (
-          <li class="stack-layer">
-            <p class="stack-layer-tag"><span aria-hidden="true">{layer.num}</span> {layer.title}</p>
-            <div class="stack-cards">
-              {layer.groups.map((g) => (
-                <div class="stack-card glass tilt">
-                  <div class="stack-card-head">
-                    <h3>{g.group}</h3>
-                    {g === c.tech.groups[4] && (
-                      <button class="stack-egg" type="button" data-game hidden aria-label={c.ui.playGame} title={c.ui.playGame}>
-                        <AlienIcon />
-                      </button>
-                    )}
-                    <span class="stack-count" aria-hidden="true">{g.items.length}</span>
-                  </div>
-                  <ul class="chips" role="list">
-                    {g.items.map((item) => <li>{item}</li>)}
-                  </ul>
-                </div>
-              ))}
             </div>
           </li>
         ))}
@@ -538,7 +565,7 @@ const termData = {
         </div>
       </details>
       <p class="footnote">{c.certs.note}</p>
-      <BandMedia src={bgCerts} />
+      <BandMedia src={bgDisk} />
     </section>
 
     <section id={c.product.id} class="band" aria-labelledby="product-title">
@@ -567,7 +594,7 @@ const termData = {
         <p class="section-lead">{c.blog.intro} {c.blog.note}</p>
         <PostList posts={latestPosts} lang={lang} />
         <p><a class="link-all" href={routes[lang].blog}>{c.blog.all} →</a></p>
-        <BandMedia src={bgBlog} />
+        <BandMedia src={bgGpu} />
       </section>
     )}
 
@@ -873,6 +900,21 @@ const termData = {
         }
         input.focus();
       });
+    });
+  }
+
+  // Header dropdown: close after choosing a section, on outside click and on Escape
+  const more = document.querySelector<HTMLDetailsElement>('.topnav-more');
+  if (more) {
+    more.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => (more.open = false)));
+    document.addEventListener('click', (e) => {
+      if (more.open && !more.contains(e.target as Node)) more.open = false;
+    });
+    addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && more.open) {
+        more.open = false;
+        more.querySelector('summary')?.focus();
+      }
     });
   }
 
