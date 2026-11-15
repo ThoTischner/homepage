@@ -46,6 +46,18 @@ const certsMain = c.certs.categories
 const certsMore = c.certs.categories
   .map((cat) => ({ ...cat, items: cat.items.filter((i) => i.more) }))
   .filter((cat) => cat.items.length > 0 || cat.extras?.length);
+// Terminal easter egg: all output is prepared here and handed to the client as JSON
+const termData = {
+  t: c.terminal,
+  skills: [
+    ['linux', 2008], ['netzwerk', 2008], ['storage', 2008], ['virtualisierung', 2011],
+    ['ansible', 2011], ['openshift', 2016], ['kubernetes', 2018], ['gitops', 2020],
+    ['kafka', 2021], ['ki-plattformen', 2021], ['llm-inference', 2024], ['ki-agenten', 2025],
+  ],
+  projects: c.projects.items.map((p) => [p.title, p.sector, p.period]),
+  certs: certsMain.flatMap((cat) => cat.items.map((i) => [i.name, i.year])),
+  sections: c.nav.map((n) => [n.href.slice(1), n.label]),
+};
 ---
 
 <div class="home">
@@ -92,6 +104,20 @@ const certsMore = c.certs.categories
     </ul>
   </nav>
 
+  {/* Terminal easter egg (native dialog, needs JS like the game) */}
+  <dialog id="terminal" class="term" aria-label={c.terminal.title} data-term={JSON.stringify(termData)}>
+    <div class="term-bar">
+      <span class="term-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+      <span class="term-title">{c.terminal.title}</span>
+      <button class="term-close" type="button" aria-label={c.terminal.close} title={c.terminal.close}>×</button>
+    </div>
+    <div class="term-out" role="log" aria-live="polite"></div>
+    <form class="term-line" method="dialog">
+      <label class="term-prompt" for="term-input">{c.terminal.prompt}</label>
+      <input id="term-input" class="term-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label={c.terminal.inputLabel} />
+    </form>
+  </dialog>
+
   <main id="main" class="content" tabindex="-1">
     {/* Hero: who and what on the left, proof (figures + client voice) on the right */}
     <section id={c.focus.id} class="hero band theme-dark" aria-labelledby="hero-title">
@@ -105,7 +131,9 @@ const certsMore = c.certs.categories
             <p class="availability"><span class="availability-dot" aria-hidden="true"></span>{c.hero.availability}</p>
           </div>
         </div>
-        <h1 id="hero-title" class="claim"><span class="claim-lead">{c.focus.lead}</span> <span class="claim-rest">{c.focus.rest}</span></h1>
+        <p class="claim-note">{c.focus.note}</p>
+        <h1 id="hero-title" class="claim">{c.focus.lead}</h1>
+        <p class="claim-rest">{c.focus.rest}</p>
         <ul class="facts" role="list" aria-label={c.hero.badgesLabel}>
           {c.hero.badges.map((b) => <li>{b}</li>)}
         </ul>
@@ -114,8 +142,8 @@ const certsMore = c.certs.categories
           <a class="pill pill-ghost" href={contact.linkedin} rel="me">LinkedIn <span aria-hidden="true">↗</span></a>
           <a class="pill pill-ghost" href={contact.github} rel="me">{c.hero.secondary} <span aria-hidden="true">↗</span></a>
           <a class="pill pill-ghost" href={contact.aiCamp}>{contact.aiCampLabel} <span aria-hidden="true">↗</span></a>
-          <button class="pill pill-ghost pill-icon" type="button" data-game hidden aria-label={c.ui.playGame} title={c.ui.playGame}>
-            <AlienIcon />
+          <button class="pill pill-ghost term-open" type="button" data-term-open hidden aria-label={c.terminal.open} title={c.terminal.open}>
+            <span class="term-glyph" aria-hidden="true">&gt;<span class="term-cursor">_</span></span>
           </button>
         </div>
       </div>
@@ -427,6 +455,11 @@ const certsMore = c.certs.categories
                 <div class="stack-card glass tilt">
                   <div class="stack-card-head">
                     <h3>{g.group}</h3>
+                    {g === c.tech.groups[4] && (
+                      <button class="stack-egg" type="button" data-game hidden aria-label={c.ui.playGame} title={c.ui.playGame}>
+                        <AlienIcon />
+                      </button>
+                    )}
                     <span class="stack-count" aria-hidden="true">{g.items.length}</span>
                   </div>
                   <ul class="chips" role="list">
@@ -553,6 +586,9 @@ const certsMore = c.certs.categories
     <Footer lang={lang} inline>
       <button class="egg" type="button" data-game hidden aria-label={c.ui.playEgg} title="↑ ↑ ↓ ↓ ← → ← → B A">
         <AlienIcon />
+      </button>
+      <button class="egg egg-term" type="button" data-term-open hidden aria-label={c.terminal.open} title={c.terminal.open}>
+        <span aria-hidden="true">&gt;_</span>
       </button>
     </Footer>
     </div>
@@ -692,6 +728,150 @@ const certsMore = c.certs.categories
       el.addEventListener('pointerleave', () => {
         el.style.setProperty('--rx', '0deg');
         el.style.setProperty('--ry', '0deg');
+      });
+    });
+  }
+
+  // Terminal easter egg
+  const term = document.getElementById('terminal') as HTMLDialogElement | null;
+  if (term && typeof term.showModal === 'function') {
+    type TermData = {
+      t: Record<string, any>;
+      skills: [string, number][];
+      projects: string[][];
+      certs: string[][];
+      sections: [string, string][];
+    };
+    const data = JSON.parse(term.dataset.term ?? '{}') as TermData;
+    const t = data.t;
+    const out = term.querySelector<HTMLElement>('.term-out')!;
+    const input = term.querySelector<HTMLInputElement>('.term-input')!;
+    const history: string[] = [];
+    let hIdx = 0;
+    const year = new Date().getFullYear();
+    const print = (text: string, cls = '') => {
+      const line = document.createElement('div');
+      line.className = `term-row ${cls}`.trim();
+      line.textContent = text;
+      out.append(line);
+      out.scrollTop = out.scrollHeight;
+    };
+    // YAML line: code in normal colour, '# comment' dimmed like in an editor
+    const printYaml = (text: string) => {
+      const line = document.createElement('div');
+      line.className = 'term-row';
+      const i = text.indexOf('#');
+      line.append(i < 0 ? text : text.slice(0, i));
+      if (i >= 0) {
+        const comment = document.createElement('span');
+        comment.className = 'term-dim';
+        comment.textContent = text.slice(i);
+        line.append(comment);
+      }
+      out.append(line);
+      out.scrollTop = out.scrollHeight;
+    };
+    const table = (head: string[], rows: (string | number)[][]) => {
+      const all = [head, ...rows].map((r) => r.map(String));
+      const widths = head.map((_, i) => Math.max(...all.map((r) => r[i].length)));
+      all.forEach((r, n) => print(r.map((cell, i) => cell.padEnd(widths[i] + 3)).join('').trimEnd(), n === 0 ? 'term-dim' : ''));
+    };
+    const fill = (s: string, k: string, v: string) => s.replace(`{${k}}`, v);
+    const go = (id: string) => {
+      term.close();
+      document.getElementById(id)?.scrollIntoView();
+    };
+    const commands: Record<string, (args: string[]) => void> = {
+      help: () => {
+        const w = Math.max(...t.help.map((h: string[]) => h[0].length));
+        t.help.forEach((h: string[]) => print(`  ${h[0].padEnd(w + 3)}${h[1]}`));
+      },
+      whoami: () => t.whoami.forEach((l: string) => print(l)),
+      uptime: () => print(fill(t.uptime, 'years', String(year - 2008))),
+      kubectl: (a) => {
+        const what = a[1] ?? '';
+        if (a[0] !== 'get' || !['skills', 'projects', 'certs'].includes(what)) {
+          print('usage: kubectl get skills|projects|certs', 'term-dim');
+          return;
+        }
+        if (what === 'skills') table(t.skillsHead, data.skills.map(([n, y]) => [n, 'Running', `${year - y}${t.years}`]));
+        if (what === 'projects') table(t.projectsHead, data.projects);
+        if (what === 'certs') table(t.certsHead, data.certs);
+      },
+      cat: (a) => {
+        if (a[0] === 'review.yaml') t.reviewYaml.forEach((l: string) => printYaml(l));
+        else print(`cat: ${a[0] ?? ''}: No such file`, 'term-dim');
+      },
+      ls: () => table(['DIR', ''], data.sections.map(([id, label]) => [`${id}/`, label])),
+      cd: (a) => {
+        const dir = (a[0] ?? '').replace(/\/$/, '').toLowerCase();
+        const hit = data.sections.find(([id, label]) => id === dir || label.toLowerCase() === dir);
+        if (hit) go(hit[0]);
+        else print(fill(t.cdMissing, 'dir', dir), 'term-dim');
+      },
+      sudo: (a) => {
+        if (a[0] === 'hire-me') {
+          print(t.hire, 'term-ok');
+          setTimeout(() => document.querySelector<HTMLAnchorElement>('.hero .actions .pill-solid')?.click(), 600);
+        } else print(t.sudo, 'term-dim');
+      },
+      rm: () => print(t.rm, 'term-dim'),
+      play: (a) => {
+        if (a[0] === 'invaders') {
+          print(t.game, 'term-ok');
+          setTimeout(() => {
+            term.close();
+            document.querySelector<HTMLButtonElement>('[data-game]')?.click();
+          }, 500);
+        } else print('usage: play invaders', 'term-dim');
+      },
+      clear: () => (out.textContent = ''),
+      exit: () => term.close(),
+    };
+    const run = (raw: string) => {
+      const line = raw.trim();
+      print(`${t.prompt} ${line}`, 'term-cmd');
+      if (!line) return;
+      history.push(line);
+      hIdx = history.length;
+      const [cmd, ...args] = line.split(/\s+/);
+      (commands[cmd.toLowerCase()] ?? (() => print(fill(t.notFound, 'cmd', cmd), 'term-dim')))(args);
+    };
+    const names = ['help', 'whoami', 'uptime', 'kubectl get skills', 'kubectl get projects', 'kubectl get certs', 'cat review.yaml', 'ls', 'cd ', 'sudo hire-me', 'play invaders', 'clear', 'exit'];
+    term.querySelector('form')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      run(input.value);
+      input.value = '';
+    });
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowUp' && hIdx > 0) {
+        input.value = history[--hIdx];
+        e.preventDefault();
+      } else if (e.key === 'ArrowDown') {
+        hIdx = Math.min(history.length, hIdx + 1);
+        input.value = history[hIdx] ?? '';
+        e.preventDefault();
+      } else if (e.key === 'Tab') {
+        const match = names.find((n) => input.value && n.startsWith(input.value));
+        if (match) input.value = match;
+        e.preventDefault();
+      }
+    });
+    term.querySelector('.term-close')?.addEventListener('click', () => term.close());
+    term.addEventListener('click', (e) => {
+      if (e.target === term) term.close();
+      else input.focus();
+    });
+    let greeted = false;
+    document.querySelectorAll<HTMLButtonElement>('[data-term-open]').forEach((b) => {
+      b.hidden = false;
+      b.addEventListener('click', () => {
+        term.showModal();
+        if (!greeted) {
+          t.welcome.forEach((l: string) => print(l, 'term-dim'));
+          greeted = true;
+        }
+        input.focus();
       });
     });
   }
