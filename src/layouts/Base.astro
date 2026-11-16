@@ -77,6 +77,18 @@ const ogImage = new URL(ogPath ?? `/og-${lang}.jpg`, Astro.site);
     )}
     <slot name="head" />
     {schema && <script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />}
+    {/* Cookieless reach measurement (Umami Cloud), production build only and limited to the live domain.
+        Script from cloud.umami.is, events go to gateway.umami.is: both are allowed in the CSP (astro.config.mjs). */}
+    {import.meta.env.PROD && (
+      <script
+        is:inline
+        defer
+        src="https://cloud.umami.is/script.js"
+        data-website-id="21f37b29-00d8-4281-b5fc-1784aed33096"
+        data-domains={Astro.site?.hostname}
+        data-do-not-track="true"
+      ></script>
+    )}
   </head>
   <body>
     <a class="skip-link" href="#main">{c.ui.skip}</a>

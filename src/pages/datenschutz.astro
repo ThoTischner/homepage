@@ -5,16 +5,16 @@ import ProtectedLink from '../components/ProtectedLink.astro';
 import { contact, routes } from '../i18n/content';
 ---
 
-<Base lang="de" title="Datenschutzerklärung – Thomas Tischner IT Systems" description="Datenschutzerklärung von Thomas Tischner IT Systems: Hosting über GitHub Pages, keine Cookies, kein Tracking." alternates={{ en: routes.en.privacy }}>
+<Base lang="de" title="Datenschutzerklärung – Thomas Tischner IT Systems" description="Datenschutzerklärung von Thomas Tischner IT Systems: Hosting über GitHub Pages, keine Cookies, Reichweitenmessung mit Umami." alternates={{ en: routes.en.privacy }}>
   <article class="legal">
     <div class="container">
       <h1>Datenschutzerklärung</h1>
 
       <p class="note">
-        Kurz gesagt: Diese Website setzt keine Cookies, verwendet kein Tracking und keine Analyse-Tools
-        und lädt keine Inhalte von Drittanbietern (Schriftarten werden lokal ausgeliefert). Personenbezogene
-        Daten fallen nur beim technisch notwendigen Abruf der Seite und bei einer Kontaktaufnahme per E-Mail oder
-        Telefon an.
+        Kurz gesagt: Diese Website setzt keine Cookies. Für eine einfache Reichweitenmessung nutze ich den
+        Dienst Umami, ebenfalls ohne Cookies (Abschnitt 4). Schriftarten werden lokal ausgeliefert, weitere
+        Inhalte von Drittanbietern werden nicht geladen. Personenbezogene Daten fallen beim Abruf der Seite,
+        bei der Reichweitenmessung und bei einer Kontaktaufnahme per E-Mail oder Telefon an.
       </p>
 
       <h2>1. Verantwortlicher</h2>
@@ -65,12 +65,12 @@ import { contact, routes } from '../i18n/content';
         <a href="https://docs.github.com/de/site-policy/privacy-policies/github-general-privacy-statement">Datenschutzhinweis von GitHub</a>.
       </p>
 
-      <h2>3. Keine Cookies, kein Tracking</h2>
+      <h2>3. Keine Cookies, kein Tracking über Websites hinweg</h2>
       <p>
         Diese Website verwendet keine Cookies und keine vergleichbaren Technologien zur Speicherung von
-        Informationen auf Ihrem Endgerät. Es findet keine Reichweitenmessung, kein Tracking und keine
-        Profilbildung statt. Es werden keine externen Schriftarten, Skripte oder sonstigen Inhalte von
-        Drittanbietern eingebunden.
+        Informationen auf Ihrem Endgerät. Außer der in Abschnitt 4 beschriebenen Reichweitenmessung findet
+        kein Tracking und keine Profilbildung statt. Externe Schriftarten oder sonstige Inhalte von
+        Drittanbietern werden nicht eingebunden; einzige Ausnahme ist das Skript von Umami.
       </p>
       <p>
         Die Website enthält kleine JavaScript-Funktionen, teils direkt in die Seite eingebettet, teils (das
@@ -83,7 +83,52 @@ import { contact, routes } from '../i18n/content';
         und übermitteln keine Daten an mich oder Dritte. Die Website funktioniert auch ohne JavaScript.
       </p>
 
-      <h2>4. Kontakt per E-Mail oder Telefon</h2>
+      <h2>4. Reichweitenmessung mit Umami</h2>
+      <p>
+        Um zu sehen, welche Seiten und Artikel gelesen werden und wie Besucher auf die Website kommen, nutze
+        ich den Analysedienst Umami Cloud der Umami Software, Inc., 28 Geary St, Suite 650 #243, San Francisco,
+        California, USA. Umami verarbeitet die Daten in meinem Auftrag; dafür besteht ein Vertrag zur
+        Auftragsverarbeitung nach Art. 28 DSGVO.
+      </p>
+      <p>
+        Beim Aufruf einer Seite lädt Ihr Browser ein Skript von cloud.umami.is und sendet folgende Angaben an
+        Umami (gateway.umami.is):
+      </p>
+      <ul>
+        <li>aufgerufene Seite (Adresse einschließlich Parametern) und Seitentitel,</li>
+        <li>Referrer-URL (die zuvor besuchte Seite),</li>
+        <li>Browser, Betriebssystem und Gerätetyp,</li>
+        <li>Bildschirmgröße und Spracheinstellung des Browsers,</li>
+        <li>ungefährer Standort (Land, Region, Stadt), abgeleitet aus der IP-Adresse.</li>
+      </ul>
+      <p>
+        Umami setzt keine Cookies und speichert nichts auf Ihrem Endgerät. Ihre IP-Adresse wird nicht in den
+        Statistiken gespeichert, sondern nur kurz verarbeitet, um den ungefähren Standort zu bestimmen und eine
+        Besucherkennung zu bilden. Diese Kennung ist ein Hashwert aus Website-Kennung, IP-Adresse, Browserkennung
+        (User-Agent) und einem Zufallswert, der monatlich wechselt. Damit lassen sich Aufrufe zusammenfassen,
+        ohne Sie namentlich zu identifizieren. Es handelt sich dennoch um pseudonyme personenbezogene Daten.
+        Ein Profil über mehrere Websites hinweg wird nicht gebildet. Ich selbst sehe nur zusammengefasste
+        Statistiken.
+      </p>
+      <p>
+        Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Mein berechtigtes Interesse liegt darin, die Reichweite
+        meiner Inhalte zu messen und die Website zu verbessern. Die Statistikdaten werden nach 6 Monaten
+        gelöscht.
+      </p>
+      <p>
+        Die Statistikdaten werden in der EU-Region von Umami gespeichert. Umami setzt jedoch auch
+        Unterauftragsverarbeiter in den USA ein (etwa für Auslieferung und Betrieb), sodass Daten in die USA
+        übermittelt werden können. Grundlage dafür sind die EU-Standardvertragsklauseln (Art. 46 Abs. 2 lit. c
+        DSGVO), die Bestandteil des Vertrags zur Auftragsverarbeitung sind. Weitere Informationen finden Sie in
+        der <a href="https://umami.is/privacy">Datenschutzerklärung von Umami</a>.
+      </p>
+      <p>
+        Wenn Ihr Browser das Signal „Do Not Track“ sendet, findet keine Messung statt. Sie können die Messung
+        außerdem verhindern, indem Sie JavaScript deaktivieren oder einen Inhaltsblocker verwenden. Ihr
+        Widerspruchsrecht nach Art. 21 DSGVO (Abschnitt 8) bleibt davon unberührt.
+      </p>
+
+      <h2>5. Kontakt per E-Mail oder Telefon</h2>
       <p>
         Wenn Sie mir eine E-Mail senden oder mich anrufen, verarbeite ich Ihre Angaben (insbesondere Name,
         E-Mail-Adresse bzw. Telefonnummer und Inhalt Ihrer Anfrage), um Ihr Anliegen zu bearbeiten.
@@ -101,7 +146,7 @@ import { contact, routes } from '../i18n/content';
         1&amp;1 Mail &amp; Media GmbH, Brauerstraße 48, 76135 Karlsruhe.
       </p>
 
-      <h2>5. Externe Links</h2>
+      <h2>6. Externe Links</h2>
       <p>
         Diese Website enthält Links zu externen Angeboten, u. a. zu meinen Profilen bei LinkedIn und GitHub, zu einem
         Zertifikatsnachweis bei Credly und zu meinen eigenen Projekten holzbau-konfigurator.de, aisolutionscamp.io und observability-mcp auf GitHub Pages. Daten werden an
@@ -109,7 +154,7 @@ import { contact, routes } from '../i18n/content';
         des jeweiligen Angebots.
       </p>
 
-      <h2>6. Pflicht zur Bereitstellung, automatisierte Entscheidungen</h2>
+      <h2>7. Pflicht zur Bereitstellung, automatisierte Entscheidungen</h2>
       <p>
         Sie sind weder gesetzlich noch vertraglich verpflichtet, mir personenbezogene Daten bereitzustellen.
         Ohne die technisch notwendige Übermittlung Ihrer IP-Adresse kann die Website jedoch nicht ausgeliefert
@@ -117,7 +162,7 @@ import { contact, routes } from '../i18n/content';
         Entscheidungsfindung einschließlich Profiling (Art. 22 DSGVO) findet nicht statt.
       </p>
 
-      <h2>7. Ihre Rechte</h2>
+      <h2>8. Ihre Rechte</h2>
       <p>Sie haben gegenüber mir folgende Rechte hinsichtlich Ihrer personenbezogenen Daten:</p>
       <ul>
         <li>Recht auf Auskunft (Art. 15 DSGVO),</li>
@@ -140,7 +185,7 @@ import { contact, routes } from '../i18n/content';
         Sie können sich auch an die Aufsichtsbehörde Ihres Aufenthaltsorts oder Arbeitsplatzes wenden.
       </p>
 
-      <h2>8. SSL-/TLS-Verschlüsselung</h2>
+      <h2>9. SSL-/TLS-Verschlüsselung</h2>
       <p>
         Diese Website nutzt aus Sicherheitsgründen eine TLS-Verschlüsselung (HTTPS). Eine verschlüsselte
         Verbindung erkennen Sie an „https://“ in der Adresszeile Ihres Browsers.

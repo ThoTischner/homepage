@@ -5,7 +5,7 @@ import ProtectedLink from '../../components/ProtectedLink.astro';
 import { contact, routes } from '../../i18n/content';
 ---
 
-<Base lang="en" title="Privacy Policy – Thomas Tischner IT Systems" description="Privacy policy of Thomas Tischner IT Systems: hosted on GitHub Pages, no cookies, no tracking." alternates={{ de: routes.de.privacy }}>
+<Base lang="en" title="Privacy Policy – Thomas Tischner IT Systems" description="Privacy policy of Thomas Tischner IT Systems: hosted on GitHub Pages, no cookies, reach measurement with Umami." alternates={{ de: routes.de.privacy }}>
   <article class="legal">
     <div class="container">
       <h1>Privacy Policy</h1>
@@ -16,9 +16,10 @@ import { contact, routes } from '../../i18n/content';
       </p>
 
       <p>
-        In short: this website sets no cookies, uses no tracking or analytics and loads no third-party content
-        (fonts are served locally). Personal data is only processed when the page is delivered and when you
-        contact me by email or phone.
+        In short: this website sets no cookies. For simple reach measurement I use the Umami service, also
+        without cookies (section 4). Fonts are served locally and no other third-party content is loaded.
+        Personal data is processed when the page is delivered, for reach measurement and when you contact me
+        by email or phone.
       </p>
 
       <h2>1. Controller</h2>
@@ -66,11 +67,11 @@ import { contact, routes } from '../../i18n/content';
         <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub’s privacy statement</a>.
       </p>
 
-      <h2>3. No cookies, no tracking</h2>
+      <h2>3. No cookies, no cross-site tracking</h2>
       <p>
         This website does not use cookies or comparable technologies to store information on your device.
-        There is no reach measurement, no tracking and no profiling. No external fonts, scripts or other
-        third-party content are embedded.
+        Apart from the reach measurement described in section 4, there is no tracking and no profiling. No
+        external fonts or other third-party content are embedded; the only exception is the Umami script.
       </p>
       <p>
         The website contains small JavaScript functions, partly embedded directly in the page and partly (the
@@ -83,7 +84,49 @@ import { contact, routes } from '../../i18n/content';
         website also works without JavaScript.
       </p>
 
-      <h2>4. Contact by email or phone</h2>
+      <h2>4. Reach measurement with Umami</h2>
+      <p>
+        To see which pages and articles are read and how visitors find the website, I use the analytics service
+        Umami Cloud of Umami Software, Inc., 28 Geary St, Suite 650 #243, San Francisco, California, USA. Umami
+        processes the data on my behalf under a data processing agreement pursuant to Art. 28 GDPR.
+      </p>
+      <p>
+        When you open a page, your browser loads a script from cloud.umami.is and sends the following
+        information to Umami (gateway.umami.is):
+      </p>
+      <ul>
+        <li>page visited (address including parameters) and page title,</li>
+        <li>referrer URL (the previously visited page),</li>
+        <li>browser, operating system and device type,</li>
+        <li>screen size and browser language,</li>
+        <li>approximate location (country, region, city), derived from the IP address.</li>
+      </ul>
+      <p>
+        Umami sets no cookies and stores nothing on your device. Your IP address is not stored in the
+        statistics; it is only processed briefly to determine the approximate location and to create a visitor
+        identifier. This identifier is a hash of the website ID, IP address, browser identifier (user agent) and
+        a random value that changes monthly. It allows visits to be grouped without identifying you by name.
+        It is nevertheless pseudonymous personal data. No profile across multiple websites is created. I only
+        see aggregated statistics.
+      </p>
+      <p>
+        The legal basis is Art. 6(1)(f) GDPR. My legitimate interest lies in measuring the reach of my content
+        and improving the website. The statistics are deleted after 6 months.
+      </p>
+      <p>
+        The statistics are stored in Umami’s EU region. However, Umami also uses subprocessors in the USA (for
+        example for delivery and operations), so data may be transferred to the USA. This is based on the EU
+        Standard Contractual Clauses (Art. 46(2)(c) GDPR), which are part of the data processing agreement.
+        Further information can be found in
+        <a href="https://umami.is/privacy">Umami’s privacy policy</a>.
+      </p>
+      <p>
+        If your browser sends a “Do Not Track” signal, no measurement takes place. You can also prevent the
+        measurement by disabling JavaScript or using a content blocker. Your right to object under Art. 21 GDPR
+        (section 8) remains unaffected.
+      </p>
+
+      <h2>5. Contact by email or phone</h2>
       <p>
         If you send me an email or call me, I process your details (in particular name, email address or phone
         number and the content of your request) to handle your inquiry. The legal basis is Art. 6(1)(b) GDPR
@@ -100,14 +143,14 @@ import { contact, routes } from '../../i18n/content';
         GmbH, Brauerstraße 48, 76135 Karlsruhe, Germany.
       </p>
 
-      <h2>5. External links</h2>
+      <h2>6. External links</h2>
       <p>
         This website contains links to external services, including my profiles on LinkedIn and GitHub, a
         certification record on Credly and my own projects holzbau-konfigurator.de, aisolutionscamp.io and observability-mcp on GitHub Pages. Data is only transmitted to
         these services when you click a link. Their respective privacy policies then apply.
       </p>
 
-      <h2>6. Obligation to provide data, automated decision-making</h2>
+      <h2>7. Obligation to provide data, automated decision-making</h2>
       <p>
         You are under no legal or contractual obligation to provide me with personal data. However, the website
         cannot be delivered without the technically necessary transmission of your IP address, and I cannot
@@ -115,7 +158,7 @@ import { contact, routes } from '../../i18n/content';
         profiling (Art. 22 GDPR).
       </p>
 
-      <h2>7. Your rights</h2>
+      <h2>8. Your rights</h2>
       <p>You have the following rights regarding your personal data:</p>
       <ul>
         <li>right of access (Art. 15 GDPR),</li>
@@ -138,7 +181,7 @@ import { contact, routes } from '../../i18n/content';
         You may also contact the supervisory authority of your habitual residence or place of work.
       </p>
 
-      <h2>8. SSL/TLS encryption</h2>
+      <h2>9. SSL/TLS encryption</h2>
       <p>
         For security reasons, this website uses TLS encryption (HTTPS). You can recognize an encrypted
         connection by “https://” in your browser’s address bar.
