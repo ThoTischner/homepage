@@ -1,0 +1,15 @@
+# Accepted Trivy findings. Every entry needs a reason and an expiry date:
+# once expired, the finding fails the Security workflow again and has to be
+# re-assessed (update the dependency or extend the entry with a new reason).
+
+vulnerabilities:
+  # picomatch ReDoS via single-branch repeated extglobs (GHSA-fc5q-39xc-vjpf),
+  # affects all releases <= 4.0.7; no patched version published yet.
+  # Build-time only (Astro, Vite, tinyglobby, anymatch): globs come from the
+  # project's own config, and production serves the static dist/ only, so
+  # no untrusted input ever reaches picomatch.
+  - id: CVE-2026-112366
+    paths:
+      - package-lock.json
+    expired_at: 2026-12-18
+    statement: Build-time dependency only, no patched release yet; re-check when picomatch ships a fix.

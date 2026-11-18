@@ -50,6 +50,7 @@ jobs:
         run: >-
           docker run --rm -v "$PWD:/src" "$TRIVY_IMAGE" fs --quiet
           --scanners vuln,secret,misconfig --severity MEDIUM,HIGH,CRITICAL
+          --ignorefile /src/.trivyignore.yaml
           --format sarif --output /src/trivy.sarif /src
 
       - uses: github/codeql-action/upload-sarif@24c54180a607b1449ed407dd24f251e4e9147c8d # v4.38.3
@@ -61,4 +62,5 @@ jobs:
       - name: Fail on high or critical findings
         run: >-
           docker run --rm -v "$PWD:/src:ro" "$TRIVY_IMAGE" fs --quiet
-          --scanners vuln,secret,misconfig --severity HIGH,CRITICAL --exit-code 1 /src
+          --scanners vuln,secret,misconfig --severity HIGH,CRITICAL
+          --ignorefile /src/.trivyignore.yaml --exit-code 1 /src
