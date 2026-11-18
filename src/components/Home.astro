@@ -889,11 +889,23 @@ const termData = {
       if (e.target === term) term.close();
       else input.focus();
     });
+    // Follow the visible viewport while open, so the on-screen keyboard
+    // shrinks the terminal instead of covering the prompt
+    const vv = window.visualViewport;
+    const fit = () => {
+      if (!vv || !term.open) return;
+      term.style.setProperty('--term-vh', `${vv.height}px`);
+      term.style.setProperty('--term-top', `${vv.offsetTop}px`);
+      out.scrollTop = out.scrollHeight;
+    };
+    vv?.addEventListener('resize', fit);
+    vv?.addEventListener('scroll', fit);
     let greeted = false;
     document.querySelectorAll<HTMLButtonElement>('[data-term-open]').forEach((b) => {
       b.hidden = false;
       b.addEventListener('click', () => {
         term.showModal();
+        fit();
         if (!greeted) {
           t.welcome.forEach((l: string) => print(l, 'term-dim'));
           greeted = true;

@@ -241,7 +241,7 @@ ol[role='list'] {
     gap: 0.45rem;
   }
 
-  .actions .pill:not(.pill-icon) {
+  .actions .pill:not(.pill-icon, .term-open) {
     padding-inline: 0.9rem;
   }
 }
@@ -613,12 +613,12 @@ html:has(.topbar) {
 
 /* Small screens: portrait and language switch in one row, location and availability below */
 @media (max-width: 559px) {
-  .actions .pill:not(.pill-icon) {
+  .actions .pill:not(.pill-icon, .term-open) {
     padding-inline: 0.85rem;
     font-size: 0.875rem;
   }
 
-  .actions .pill > span[aria-hidden='true'] {
+  .actions .pill > span[aria-hidden='true']:not(.term-glyph) {
     display: none;
   }
 }
@@ -3031,6 +3031,9 @@ html:has(.band) {
 .product-repo {
   position: relative;
   z-index: 1;
+  display: inline-block;
+  padding-block: 0.5rem;
+  margin-block: -0.5rem;
   color: var(--muted);
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -3176,6 +3179,53 @@ html:has(.band) {
   color: var(--text);
 }
 
+/* Phones: brand on two lines and a tighter nav so the header never
+   overflows (it used to push the page into horizontal scrolling) */
+@media (max-width: 559px) {
+  .header-inner {
+    gap: 0.75rem;
+  }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+  }
+
+  .brand-sub {
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .nav-list {
+    gap: 0.3rem;
+  }
+
+  .nav-link {
+    padding-inline: 0.45rem;
+  }
+
+  .nav-list .pill-sm {
+    padding-inline: 0.75rem;
+  }
+}
+
+/* Very narrow phones (iPhone SE 1st gen, small Androids) */
+@media (max-width: 374px) {
+  .brand {
+    font-size: 0.875rem;
+  }
+
+  .nav-link {
+    padding-inline: 0.3rem;
+  }
+
+  .nav-list .pill-sm {
+    padding-inline: 0.6rem;
+  }
+}
+
 .legal {
   padding-block: clamp(3rem, 8vw, 5rem);
 }
@@ -3186,6 +3236,9 @@ html:has(.band) {
   font-size: clamp(2.5rem, 6vw, 3.5rem);
   line-height: 1;
   margin-bottom: 2rem;
+  /* Long German compounds must not overflow narrow phones */
+  hyphens: auto;
+  overflow-wrap: break-word;
 }
 
 .legal h2 {
@@ -3261,6 +3314,9 @@ html:has(.band) {
 }
 
 .footer-links a {
+  display: inline-block;
+  padding-block: 0.65rem;
+  margin-block: -0.65rem;
   color: var(--subtle);
 }
 
@@ -3380,6 +3436,9 @@ html:has(.band) {
 }
 
 .breadcrumb a {
+  display: inline-block;
+  padding-block: 0.5rem;
+  margin-block: -0.5rem;
   color: var(--subtle);
 }
 
@@ -3952,6 +4011,31 @@ html:has(.band) {
   color: var(--term-fg);
   font: inherit;
   caret-color: var(--term-accent);
+}
+
+/* Phones: pin the terminal to the top of the visible area so the on-screen
+   keyboard never covers the prompt (--term-top/--term-vh come from
+   visualViewport), and use 16px input text so iOS does not zoom on focus */
+@media (max-width: 559px) {
+  .term {
+    inset: var(--term-top, 0px) 0 auto;
+    width: calc(100vw - 1.5rem);
+    height: min(480px, calc(var(--term-vh, 100dvh) - 1.5rem));
+    margin: 0.75rem auto 0;
+    font-size: 0.8125rem;
+  }
+
+  .term-out {
+    padding-inline: 0.85rem;
+  }
+
+  .term-line {
+    padding-inline: 0.85rem;
+  }
+
+  .term-input {
+    font-size: 16px;
+  }
 }
 
 /* Game button on the "Container & Kubernetes" stack card */
