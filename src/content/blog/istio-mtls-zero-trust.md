@@ -2,9 +2,12 @@
 title: "mTLS mit Istio: Zero Trust im Cluster Schritt für Schritt"
 description: "mTLS mit Istio 1.31 in der Praxis: SPIFFE-Identitäten, Sidecar vs. Ambient, Migration auf STRICT ohne Ausfall, Default-Deny und eigene PKI mit Vault."
 pubDate: 2026-10-06
+updated: 2026-11-28
 tags: ["Istio", "mTLS", "Zero Trust", "Kubernetes Security", "Service Mesh"]
 summary: "Istio gibt jedem Workload eine kurzlebige X.509-Identität im SPIFFE-Format und verschlüsselt Service-zu-Service-Verkehr per mTLS. Zero Trust entsteht aber erst durch PeerAuthentication im Modus STRICT plus AuthorizationPolicies mit Default-Deny, die Zugriffe an Identitäten statt an IP-Adressen binden. In regulierten Umgebungen gehört die Root-CA in eine externe PKI, etwa HashiCorp Vault über cert-manager istio-csr."
 faq:
+  - q: "Wie funktioniert mTLS in Istio?"
+    a: "Istio gibt jedem Workload ein X.509-Zertifikat mit einer SPIFFE-Identität aus Namespace und ServiceAccount, signiert von istiod und standardmäßig 24 Stunden gültig. Mit diesen Zertifikaten bauen die Envoy-Sidecars oder im Ambient-Modus ztunnel beidseitig authentifizierte, verschlüsselte Verbindungen auf, ohne dass die Anwendung geändert werden muss. Erzwungen wird mTLS erst durch PeerAuthentication im Modus STRICT."
   - q: "Wie stellt man Istio von PERMISSIVE auf STRICT um, ohne Ausfall?"
     a: "Zuerst alle Workloads in den Mesh holen und per Metrik prüfen, dass kein Klartext-Verkehr mehr ankommt, etwa über das Label connection_security_policy an istio_requests_total und istio_tcp_connections_opened_total. Danach STRICT namespaceweise per PeerAuthentication setzen und erst zuletzt meshweit im Root-Namespace istio-system. Bekannte Nicht-Mesh-Clients bekommen vorher gezielte, dokumentierte Ausnahmen."
   - q: "Ist der Istio Ambient-Modus produktionsreif?"

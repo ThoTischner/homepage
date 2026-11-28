@@ -2,11 +2,14 @@
 title: "Terraform oder Crossplane: Leitfaden für Plattformteams"
 description: "Terraform, OpenTofu oder Crossplane: Vergleich von State, Drift, Self-Service, GitOps und Lizenz, mit Entscheidungsmatrix und Codebeispielen für 2026."
 pubDate: 2026-10-06
+updated: 2026-11-28
 tags: ["Terraform", "OpenTofu", "Crossplane", "Infrastructure as Code", "Platform Engineering"]
 summary: "Terraform und OpenTofu arbeiten mit einem expliziten Plan/Apply-Workflow und eignen sich am besten für Grundinfrastruktur, die selten und kontrolliert geändert wird. Crossplane gleicht den Zustand kontinuierlich über Kubernetes-Controller ab und ist die stärkere Wahl, wenn Fachteams Infrastruktur per Self-Service über eigene Plattform-APIs anfordern sollen. In vielen Organisationen ist die Kombination beider sinnvoll: Terraform oder OpenTofu für das Bootstrapping, Crossplane für die Self-Service-Schicht."
 faq:
   - q: "Was ist der Hauptunterschied zwischen Terraform und Crossplane?"
     a: "Terraform und OpenTofu ändern Infrastruktur nur, wenn jemand einen Plan erzeugt und anwendet. Crossplane läuft als Controller in einem Kubernetes-Cluster und gleicht den gewünschten Zustand dauerhaft mit der Realität ab. Damit korrigiert Crossplane Drift automatisch, während Terraform Drift erst beim nächsten Plan sichtbar macht."
+  - q: "OpenTofu oder Terraform: Was ist die richtige Wahl für Kubernetes-Infrastruktur?"
+    a: "Im Kern arbeiten beide gleich und nutzen dieselben Provider, die Entscheidung hängt vor allem an Lizenz und Beschaffung. Wer HCP Terraform oder Terraform Enterprise nutzt, bleibt bei Terraform; wer eine OSI-Lizenz und herstellerneutrale Governance braucht, wählt OpenTofu unter MPL 2.0. Sollen Fachteams Infrastruktur auf Kubernetes per Self-Service bestellen, kommt Crossplane hinzu, Terraform oder OpenTofu bleiben dann für das Bootstrapping."
   - q: "Ist Terraform noch Open Source?"
     a: "Nein, im Sinne der OSI-Definition nicht. HashiCorp hat Terraform im August 2023 von der MPL 2.0 auf die Business Source License 1.1 umgestellt, die kommerzielle Nutzung erlaubt, aber konkurrierende Angebote ausschließt. Provider und SDKs blieben unter MPL 2.0. Der Open-Source-Fork OpenTofu steht unter MPL 2.0 und ist seit April 2025 ein CNCF-Sandbox-Projekt."
   - q: "Kann man Terraform-Module in Crossplane weiterverwenden?"

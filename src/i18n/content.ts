@@ -41,7 +41,7 @@ const de = {
   meta: {
     title: 'IT-Architekt & Engineer: vom Server bis zur KI-Plattform | Thomas Tischner',
     description:
-      'Freiberuflicher IT-Architekt aus Nürnberg: Architektur, Review und Umsetzung von Infrastruktur, Kubernetes, Cloud und KI-Plattformen. Auch air-gapped.',
+      'Freiberuflicher IT-Architekt aus Nürnberg: Kubernetes-Beratung, Architektur und Umsetzung von Infrastruktur, Cloud und KI-Plattformen. Auch air-gapped.',
     ogAlt: 'Thomas Tischner IT Systems: IT-Architekt & Engineer vom Server bis zur KI-Plattform',
     jobTitle: 'IT-Architekt & Engineer',
   },
@@ -186,7 +186,7 @@ const de = {
   services: {
     id: 'leistungen',
     title: 'Leistungen',
-    intro: 'Abgedeckt ist der ganze Stack, vom einzelnen Linux-Server bis zur Kubernetes-Plattform mit vielen Clustern. So entstehen Systeme, die als Ganzes funktionieren, und Störungen werden dort behoben, wo ihre Ursache wirklich liegt.',
+    intro: 'Abgedeckt ist der ganze Stack, vom einzelnen Linux-Server bis zur Kubernetes-Plattform mit vielen Clustern. So entstehen Systeme, die als Ganzes funktionieren, und Störungen werden dort behoben, wo ihre Ursache wirklich liegt. Kubernetes-Beratung und Umsetzung gibt es von Nürnberg aus vor Ort oder remote in Deutschland, Österreich und der Schweiz.',
     hint: 'Klicken Sie auf eine Nutzergruppe oder einen Baustein für Details.',
     closeLabel: 'Schließen',
     items: [

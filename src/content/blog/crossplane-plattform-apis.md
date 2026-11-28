@@ -2,9 +2,14 @@
 title: "Crossplane v2: Plattform-APIs für Self-Service-Infrastruktur"
 description: "Crossplane v2 in der Praxis: namespaced XRs, XRDs und Function-Pipelines als Plattform-API, dazu GitOps mit Argo CD, RBAC, Versionierung und Fallstricke."
 pubDate: 2026-10-06
+updated: 2026-11-28
 tags: ["Crossplane", "Platform Engineering", "Kubernetes", "GitOps", "Self-Service"]
 summary: "Mit Crossplane v2 definiert ein Plattformteam eigene Kubernetes-APIs (XRDs), die Fachteams als namespaced Composite Resources in ihrem Namespace bestellen; Claims sind dafür nicht mehr nötig. Compositions laufen ausschließlich als Function-Pipeline, Managed Resources sind namespaced und steuern ihr Löschverhalten über managementPolicies statt deletionPolicy. Entscheidend für den Betrieb sind ein schmales API-Design, striktes RBAC, getestete Compositions und kontrollierte Provider-Upgrades."
 faq:
+  - q: "Was ist Crossplane?"
+    a: "Crossplane ist ein Open-Source-Projekt der CNCF unter Apache-2.0-Lizenz, das einen Kubernetes-Cluster zur Control Plane für Infrastruktur macht. Cloud-Ressourcen wie Buckets oder Datenbanken werden als Kubernetes-Objekte beschrieben, und Controller gleichen sie dauerhaft mit der Realität ab. Plattformteams bauen darauf eigene APIs, über die Fachteams Infrastruktur per Self-Service bestellen."
+  - q: "Was ist der Unterschied zwischen XR und XRD in Crossplane?"
+    a: "Eine XRD (Composite Resource Definition) legt Namen und Schema einer eigenen Plattform-API fest, vergleichbar mit einer CRD. Ein XR (Composite Resource) ist eine konkrete Instanz dieser API, etwa der ObjectBucket eines Fachteams, den eine Composition per Function-Pipeline in Managed Resources übersetzt. In Crossplane v2 sind XRs standardmäßig namespaced."
   - q: "Gibt es in Crossplane v2 noch Claims?"
     a: "Nur noch für XRDs im Kompatibilitätsmodus scope: LegacyCluster, also v1-artige XRDs. Neue XRDs mit apiextensions.crossplane.io/v2 und scope: Namespaced oder Cluster unterstützen keine Claims. Fachteams legen die Composite Resource stattdessen direkt in ihrem Namespace an."
   - q: "Wie verhindere ich, dass Crossplane beim Löschen Cloud-Ressourcen entfernt?"
@@ -33,6 +38,12 @@ sources:
 Crossplane macht aus einem Kubernetes-Cluster eine Control Plane für Infrastruktur. Der eigentliche Nutzen für Plattformteams liegt aber nicht darin, S3-Buckets oder Datenbanken als YAML zu beschreiben, sondern darin, eigene APIs zu bauen: Ein Fachteam bestellt ein `ObjectBucket` oder eine `PostgresDatabase` mit drei Feldern, und die Plattform entscheidet, welche Cloud-Ressourcen, Tags, Policies und Zugangsdaten dahinterstehen.
 
 Dieser Artikel richtet sich an Plattform-Leads und Architekt:innen, die Self-Service-Infrastruktur mit Crossplane aufbauen oder eine bestehende v1-Installation modernisieren. Er beschreibt das Modell von Crossplane v2, zeigt eine vollständige Plattform-API mit Composition Function und geht auf die Punkte ein, an denen solche Plattformen im Betrieb tatsächlich scheitern. Stand: Oktober 2026, Crossplane v2.4, Crossplane CLI v2.5.
+
+## Was ist Crossplane?
+
+Crossplane ist ein Open-Source-Projekt der CNCF unter Apache-2.0-Lizenz. Es läuft als Controller in einem Kubernetes-Cluster und verwaltet externe Infrastruktur über die Kubernetes-API: Ein S3-Bucket, eine Datenbank oder ein DNS-Eintrag wird als Kubernetes-Objekt beschrieben, Crossplane legt die Ressource beim Anbieter an und gleicht sie dauerhaft mit dem gewünschten Zustand ab. Änderungen außerhalb von Crossplane werden zurückgedreht.
+
+Die Anbindung an externe Systeme wie AWS, Azure, Helm oder Kubernetes übernehmen Provider, die je System Controller und CRDs mitbringen. Darauf baut ein Plattformteam eigene APIs: Eine XRD legt das Schema fest, eine Composition übersetzt jede Bestellung in die nötigen Ressourcen. Wie sich dieses Modell von Terraform und OpenTofu unterscheidet, beschreibt der Leitfaden [Terraform oder Crossplane](/blog/terraform-oder-crossplane/).
 
 ## Was sich mit Crossplane v2 geändert hat
 

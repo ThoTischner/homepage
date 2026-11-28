@@ -2,9 +2,14 @@
 title: "KServe und vLLM: LLM-Inference auf eigenem Kubernetes betreiben"
 description: "KServe und vLLM auf Kubernetes: Architektur, Deployment-Modi, GPU-Scheduling, Modell-Storage, Autoscaling und Betrieb ohne Internet. Mit YAML für KServe 0.21."
 pubDate: 2026-10-06
+updated: 2026-11-28
 tags: ["KServe", "vLLM", "Kubernetes", "LLM-Inference", "GPU"]
 summary: "KServe stellt mit dem InferenceService und der Hugging-Face-Runtime (vLLM-Backend) eine OpenAI-kompatible LLM-API auf eigenem Kubernetes bereit; für fortgeschrittene Szenarien mit Prefix-aware Routing und disaggregiertem Serving gibt es den LLMInferenceService auf Basis von llm-d. Für die meisten Teams ist der Standard-Modus mit fest reservierten GPUs, Modellen aus S3/MinIO oder OCI-Images und KEDA-Autoscaling auf vLLM-Metriken der belastbarste Einstieg."
 faq:
+  - q: "Was ist der Unterschied zwischen KServe und vLLM?"
+    a: "vLLM ist die Inference-Engine, die ein Sprachmodell auf der GPU ausführt. KServe ist die Plattformschicht auf Kubernetes darum herum: Es kapselt Modell-Download, Runtime, Routing und Autoscaling hinter einer deklarativen API und nutzt vLLM als Standard-Backend seiner Hugging-Face-Runtime. Man wählt also nicht zwischen beiden, sondern betreibt vLLM mit KServe."
+  - q: "Was ist KServe?"
+    a: "KServe ist ein Open-Source-Projekt für Model Serving auf Kubernetes. Über die Ressource InferenceService beschreiben Teams deklarativ, welches Modell aus welchem Speicher mit welcher Runtime und welchen Ressourcen laufen soll; KServe übernimmt Deployment, Routing und Autoscaling. Für LLMs stellt es mit vLLM als Backend eine OpenAI-kompatible Schnittstelle bereit."
   - q: "Was ist der Unterschied zwischen InferenceService und LLMInferenceService in KServe?"
     a: "Der InferenceService (serving.kserve.io/v1beta1) ist die stabile, allgemeine API für prädiktive und generative Modelle und nutzt für LLMs die Hugging-Face-Runtime mit vLLM-Backend. Der LLMInferenceService ist eine eigene, noch als Alpha markierte CRD auf Basis von llm-d, die Gateway-API-Routing, einen KV-Cache-bewussten Scheduler sowie Prefill/Decode-Trennung und Multi-Node-Parallelismus mitbringt. Für einzelne Modelle auf einer oder wenigen GPUs reicht der InferenceService."
   - q: "Lohnt sich Scale-to-Zero mit Knative für große Sprachmodelle?"
